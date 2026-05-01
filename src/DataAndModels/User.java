@@ -1,77 +1,66 @@
 package DataAndModels;
 
-/**
- * User.java
- * Member 1 - Data & Models
- * This class represents a registered user of the Cats on a Quest system.
- * It demonstrates ENCAPSULATION — all fields are private, and we use
- * getters/setters to safely access or change them.
- */
 public class User {
 
-    // --- Private fields (encapsulation: hidden from outside) ---
-    private String username;     // e.g., "juan.delacruz"
-    private String password;     // stored as plain text (simple version)
-    private String fullName;     // e.g., "Juan Dela Cruz"
-    private String email;        // must end with @g.msuiit.edu.ph
-    private String role;         // "STUDENT", "FACULTY", or "ORGANIZATION"
-    private String college;      // e.g., "College of Engineering"
-    private String idNumber;     // MSU-IIT ID number
+    private String fullName;
+    private String password;
+    private String email;
+    private String role;
+    private String college;
+    private String course;
+    private String idNumber;
 
-    // --- Constructor ---
-    // Called when you do: new User("juan", "pass123", ...)
-    public User(String username, String password, String fullName,
-                String email, String role, String college, String idNumber) {
-        this.username = username;
-        this.password = password;
+    // Constructor
+    public User(String fullName, String password, String email,
+                String role, String college, String course, String idNumber) {
         this.fullName = fullName;
+        this.password = password;
         this.email = email;
         this.role = role;
         this.college = college;
+        this.course = course;
         this.idNumber = idNumber;
     }
 
-    // --- Getters (read the private fields) ---
-    public String getUsername()  { return username; }
-    public String getPassword()  { return password; }
-    public String getFullName()  { return fullName; }
-    public String getEmail()     { return email; }
-    public String getRole()      { return role; }
-    public String getCollege()   { return college; }
-    public String getIdNumber()  { return idNumber; }
+    // Getters
+    public String getFullName() { return fullName; }
+    public String getPassword() { return password; }
+    public String getEmail()    { return email; }
+    public String getRole()     { return role; }
+    public String getCollege()  { return college; }
+    public String getCourse()   { return course; }
+    public String getIdNumber() { return idNumber; }
 
-    // --- Setters (change the private fields safely) ---
-    public void setPassword(String password) { this.password = password; }
+    // Setters
     public void setFullName(String fullName) { this.fullName = fullName; }
+    public void setPassword(String password) { this.password = password; }
+    public void setEmail(String email)       { this.email = email; }
+    public void setRole(String role)         { this.role = role; }
     public void setCollege(String college)   { this.college = college; }
+    public void setCourse(String course)     { this.course = course; }
+    public void setIdNumber(String idNumber) { this.idNumber = idNumber; }
 
     /**
-     * Converts this User object into a single line of text for saving to a file.
-     * Format: username|password|fullName|email|role|college|idNumber
+     * Converts User to file string format
+     * Format: fullName|password|email|role|college|course|idNumber
      */
     public String toFileString() {
-        return username + "|" + password + "|" + fullName + "|"
-                + email + "|" + role + "|" + college + "|" + idNumber;
+        return fullName + "|" + password + "|" + email + "|" + role + "|"
+                + college + "|" + course + "|" + idNumber;
     }
 
     /**
-     * Rebuilds a User object from a saved file line.
-     * This is a STATIC method — you call it as User.fromFileString(line)
-     * without needing an existing User object.
+     * Rebuilds User from file line
+     * FIXED: Split by | not \n
      */
     public static User fromFileString(String line) {
-        String[] parts = line.split("\\|");
-        // Make sure the line has all 7 fields before parsing
+        String[] parts = line.split("\\|");  // ← FIXED: pipe separator, not newline
         if (parts.length < 7) return null;
-        return new User(parts[0], parts[1], parts[2],
-                parts[3], parts[4], parts[5], parts[6]);
+        return new User(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6]);
     }
 
-    /**
-     * Returns a readable summary of this user (useful for debugging).
-     */
     @Override
     public String toString() {
-        return fullName + " (" + role + ") — " + email;
+        return fullName + " (" + role + ") - " + email;
     }
 }

@@ -12,12 +12,8 @@ import java.time.LocalDate;
  * It stores all users, listings, and applications in memory using ArrayLists,
  * and also saves/loads them from text files so data persists between runs.
  *
- * Why static?
- *   Methods and lists are declared static so ANY class can call them without
- *   needing to create a DataStore object. Think of it as a shared "global database".
- *
- *   Example:  DataStore.getUsers()           ← called from any class
- *             DataStore.saveAll()             ← saves everything to disk
+ * UPDATED: Removed username, using email as unique identifier.
+ * UPDATED: Added 'course' field to User.
  */
 public class DataStore {
 
@@ -49,7 +45,7 @@ public class DataStore {
 
     /**
      * Loads all saved data from files into memory.
-     * If files don't exist yet, creates the data folder and default admin account.
+     * If files don't exist yet, creates the data folder and default accounts.
      */
     public static void initialize() {
         createDataDirectory();
@@ -57,7 +53,7 @@ public class DataStore {
         loadListings();
         loadApplications();
 
-        // Seed a default admin/demo account if no users exist
+        // Seed default data if no users exist
         if (users.isEmpty()) {
             seedDefaultData();
         }
@@ -66,7 +62,7 @@ public class DataStore {
     private static void createDataDirectory() {
         File dir = new File(DATA_DIR);
         if (!dir.exists()) {
-            dir.mkdirs(); // creates the "data/" folder
+            dir.mkdirs();
         }
     }
 
@@ -87,11 +83,12 @@ public class DataStore {
     }
 
     /**
-     * Finds a user by their username. Returns null if not found.
+     * Finds a user by their EMAIL (now the unique identifier).
+     * Returns null if not found.
      */
-    public static User findUser(String username) {
+    public static User findUserByEmail(String email) {
         for (User u : users) {
-            if (u.getUsername().equalsIgnoreCase(username)) {
+            if (u.getEmail().equalsIgnoreCase(email)) {
                 return u;
             }
         }
@@ -99,10 +96,11 @@ public class DataStore {
     }
 
     /**
-     * Checks login credentials. Returns the User if correct, null otherwise.
+     * Checks login credentials using EMAIL and password.
+     * Returns the User if correct, null otherwise.
      */
-    public static User login(String username, String password) {
-        User u = findUser(username);
+    public static User login(String email, String password) {
+        User u = findUserByEmail(email);
         if (u != null && u.getPassword().equals(password)) {
             currentUser = u;
             return u;
@@ -120,9 +118,9 @@ public class DataStore {
                 && !newUser.getEmail().endsWith("@msuiit.edu.ph")) {
             return "Email must be a valid MSU-IIT email (@g.msuiit.edu.ph)";
         }
-        // Validate: username must be unique
-        if (findUser(newUser.getUsername()) != null) {
-            return "Username already exists. Please choose another.";
+        // Validate: email must be unique (now using email instead of username)
+        if (findUserByEmail(newUser.getEmail()) != null) {
+            return "Email already registered. Please use another email.";
         }
         // Validate: password length
         if (newUser.getPassword().length() < 6) {
@@ -159,12 +157,12 @@ public class DataStore {
     }
 
     /**
-     * Returns listings posted by a specific user.
+     * Returns listings posted by a specific user (by email).
      */
-    public static ArrayList<JobListing> getListingsByUser(String username) {
+    public static ArrayList<JobListing> getListingsByUser(String email) {
         ArrayList<JobListing> result = new ArrayList<>();
         for (JobListing jl : listings) {
-            if (jl.getPostedBy().equalsIgnoreCase(username)) {
+            if (jl.getPostedBy().equalsIgnoreCase(email)) {
                 result.add(jl);
             }
         }
@@ -238,12 +236,12 @@ public class DataStore {
     }
 
     /**
-     * Returns all applications made by a specific applicant.
+     * Returns all applications made by a specific applicant (by email).
      */
-    public static ArrayList<Application> getApplicationsByUser(String username) {
+    public static ArrayList<Application> getApplicationsByUser(String email) {
         ArrayList<Application> result = new ArrayList<>();
         for (Application a : applications) {
-            if (a.getApplicantUsername().equalsIgnoreCase(username)) {
+            if (a.getApplicantEmail().equalsIgnoreCase(email)) {
                 result.add(a);
             }
         }
@@ -266,9 +264,9 @@ public class DataStore {
     /**
      * Checks if a user has already applied to a specific listing.
      */
-    public static boolean hasApplied(String username, String listingId) {
+    public static boolean hasApplied(String email, String listingId) {
         for (Application a : applications) {
-            if (a.getApplicantUsername().equalsIgnoreCase(username)
+            if (a.getApplicantEmail().equalsIgnoreCase(email)
                     && a.getListingId().equals(listingId)) {
                 return true;
             }
@@ -286,15 +284,15 @@ public class DataStore {
         JobListing jl = findListing(listingId);
         if (jl == null) return "Listing not found.";
         if (!jl.getStatus().equals("OPEN")) return "This listing is no longer open.";
-        if (hasApplied(currentUser.getUsername(), listingId))
+        if (hasApplied(currentUser.getEmail(), listingId))
             return "You have already applied to this listing.";
-        if (jl.getPostedBy().equalsIgnoreCase(currentUser.getUsername()))
+        if (jl.getPostedBy().equalsIgnoreCase(currentUser.getEmail()))
             return "You cannot apply to your own listing.";
 
         String appId = String.format("APP-%03d", appCounter++);
         String today = LocalDate.now().toString();
         Application app = new Application(appId, listingId,
-                currentUser.getUsername(), today, message);
+                currentUser.getEmail(), today, message);
         applications.add(app);
         saveApplications();
         return null; // success
@@ -419,15 +417,23 @@ public class DataStore {
     // SEED DATA — pre-loads demo accounts and sample listings
     // -----------------------------------------------------------------------
     private static void seedDefaultData() {
-        // Demo accounts
-        users.add(new User("juan.delacruz",  "password123", "Juan Dela Cruz",
-                "juan.delacruz@g.msuiit.edu.ph",   "STUDENT",  "College of Engineering", "2021-00001"));
-        users.add(new User("maria.santos",   "password123", "Maria Santos",
-                "maria.santos@g.msuiit.edu.ph",    "STUDENT",  "College of Science and Mathematics", "2021-00002"));
-        users.add(new User("prof.reyes",     "faculty123",  "Dr. Ana Reyes",
-                "ana.reyes@msuiit.edu.ph",         "FACULTY",  "College of Engineering", "FAC-0001"));
-        users.add(new User("csso",           "org12345",    "CS Student Organization",
-                "csso@g.msuiit.edu.ph",            "ORGANIZATION", "College of Computer Studies", "ORG-001"));
+        // Demo accounts (UPDATED: no username, added course)
+        users.add(new User("Juan Dela Cruz", "password123",
+                "juan.delacruz@g.msuiit.edu.ph", "STUDENT",
+                "College of Engineering", "BS Computer Engineering", "2021-00001"));
+
+        users.add(new User("Maria Santos", "password123",
+                "maria.santos@g.msuiit.edu.ph", "STUDENT",
+                "College of Science and Mathematics", "BS Biology", "2021-00002"));
+
+        users.add(new User("Dr. Ana Reyes", "faculty123",
+                "ana.reyes@msuiit.edu.ph", "FACULTY",
+                "College of Engineering", "PhD in Engineering", "FAC-0001"));
+
+        users.add(new User("CS Student Organization", "org12345",
+                "csso@g.msuiit.edu.ph", "ORGANIZATION",
+                "College of Computer Studies", "Computer Science", "ORG-001"));
+
         saveUsers();
 
         // Sample listings
@@ -438,7 +444,7 @@ public class DataStore {
                 generateListingId(), "Math Tutor Needed",
                 "Looking for a 2nd year or higher student who can tutor Calculus 1. " +
                         "Sessions are twice a week, 1 hour each. Must be patient and good at explaining concepts.",
-                "juan.delacruz", today, "Tutoring",
+                "juan.delacruz@g.msuiit.edu.ph", today, "Tutoring",
                 75.0, "PER_HOUR", "Library Study Rooms", 2, deadline
         ));
         listingCounter++;
@@ -447,7 +453,7 @@ public class DataStore {
                 generateListingId(), "Graphic Designer for Org Tarpaulin",
                 "We need someone to design a tarpaulin for our upcoming seminar. " +
                         "Must know Canva or Photoshop. Deliver in 3 days from acceptance.",
-                "csso", today, "Design",
+                "csso@g.msuiit.edu.ph", today, "Design",
                 500.0, "FIXED", "Online / Remote", 1, deadline
         ));
         listingCounter++;
@@ -456,7 +462,7 @@ public class DataStore {
                 generateListingId(), "Research Assistant (Data Encoding)",
                 "Faculty research project needs help encoding survey responses into Excel. " +
                         "Approximately 200 entries. Work from home, submit by deadline.",
-                "prof.reyes", today, "Research",
+                "ana.reyes@msuiit.edu.ph", today, "Research",
                 800.0, "FIXED", "Remote", 1, deadline
         ));
         listingCounter++;
@@ -465,7 +471,7 @@ public class DataStore {
                 generateListingId(), "Campus Errand Runner",
                 "Need someone to photocopy and submit documents to the Registrar and OVCAA. " +
                         "Quick task, can be done within 2 hours.",
-                "maria.santos", today, "Errand",
+                "maria.santos@g.msuiit.edu.ph", today, "Errand",
                 150.0, "FIXED", "Admin Building Area", 1, deadline
         ));
         listingCounter++;
@@ -473,4 +479,3 @@ public class DataStore {
         saveListings();
     }
 }
-

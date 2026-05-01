@@ -1,203 +1,206 @@
 package LoginAndRegistration;
 
 import DataAndModels.User;
+import DataAndModels.DataStore;
+
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.awt.event.*;
 
-public class LoginFrame extends JFrame {
+public class LoginFrame extends JFrame implements ActionListener {
 
-    private JTextField usernameField;
+    private JTextField emailField;
     private JPasswordField passwordField;
     private JButton loginButton;
+    private JButton registerButton;
     private JLabel messageLabel;
 
-    // SIMPLE IN-MEMORY STORAGE (no files, no database)
-    private static ArrayList<User> users = new ArrayList<>();
-
-    // MSU-IIT Theme Colors
+    // Colors
     private static final Color MAROON = new Color(128, 0, 0);
-    private static final Color DARK_MAROON = new Color(102, 0, 0);
-    private static final Color WHITE = new Color(255, 255, 255);
-    private static final Color GOLD = new Color(255, 215, 0);
+    private static final Color LIGHT_BG = new Color(248, 248, 248);
+    private static final Color WHITE = new Color(255,255,255);
+    private static final Color BORDER_GRAY = new Color(220, 220, 220);
 
     public LoginFrame() {
-        setTitle("Cats on a Quest - Login | MSU-IIT");
+        setTitle("Cats on a Quest - Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(450, 420);
+        setSize(400, 500);
         setLocationRelativeTo(null);
         setResizable(false);
-
-        // Add demo users for testing
-        seedDemoUsers();
-
         initUI();
     }
 
-    private void seedDemoUsers() {
-        // Demo accounts so you can test login immediately
-        users.add(new User("juan.delacruz", "password123", "Juan Dela Cruz",
-                "juan.delacruz@g.msuiit.edu.ph", "STUDENT", "College of Engineering", "2021-00001"));
-        users.add(new User("maria.santos", "password123", "Maria Santos",
-                "maria.santos@g.msuiit.edu.ph", "STUDENT", "College of Science", "2021-00002"));
-        users.add(new User("prof.reyes", "faculty123", "Dr. Ana Reyes",
-                "ana.reyes@msuiit.edu.ph", "FACULTY", "College of Engineering", "FAC-0001"));
-    }
-
     private void initUI() {
-        JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBackground(WHITE);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        // Main panel
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(LIGHT_BG);
+
+        // Center panel with BoxLayout
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setBackground(WHITE);
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
 
         // Title
-        JLabel titleLabel = new JLabel("🐱 Cats on a Quest 🐱", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        JLabel titleLabel = new JLabel("Cats on a Quest");
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         titleLabel.setForeground(MAROON);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        mainPanel.add(titleLabel, gbc);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(titleLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 8)));
 
         // Subtitle
-        JLabel subtitleLabel = new JLabel("MSU-IIT Student Job & Service Finder", SwingConstants.CENTER);
-        subtitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        subtitleLabel.setForeground(DARK_MAROON);
-        gbc.gridy = 1;
-        mainPanel.add(subtitleLabel, gbc);
+        JLabel subtitleLabel = new JLabel("MSU-IIT Job & Service Finder");
+        subtitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        subtitleLabel.setForeground(Color.GRAY);
+        subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(subtitleLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 30)));
 
-        // Spacer
-        gbc.gridy = 2;
-        mainPanel.add(Box.createVerticalStrut(10), gbc);
+        // Email label
+        JLabel emailLabel = new JLabel("Email address");
+        emailLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        emailLabel.setForeground(Color.DARK_GRAY);
+        emailLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(emailLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 
-        // Username
-        gbc.gridwidth = 1;
-        gbc.gridy = 3;
-        gbc.gridx = 0;
-        JLabel usernameLabel = new JLabel("Username:");
-        usernameLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        usernameLabel.setForeground(MAROON);
-        mainPanel.add(usernameLabel, gbc);
+        // Email field
+        emailField = new JTextField();
+        emailField.setMaximumSize(new Dimension(280, 36));
+        emailField.setPreferredSize(new Dimension(280, 36));
+        emailField.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        emailField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(BORDER_GRAY, 1),
+                BorderFactory.createEmptyBorder(8, 12, 8, 12)
+        ));
+        emailField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(emailField);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        gbc.gridx = 1;
-        usernameField = new JTextField(20);
-        usernameField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        mainPanel.add(usernameField, gbc);
+        // Password label
+        JLabel passwordLabel = new JLabel("Password");
+        passwordLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        passwordLabel.setForeground(Color.DARK_GRAY);
+        passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(passwordLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 
-        // Password
-        gbc.gridy = 4;
-        gbc.gridx = 0;
-        JLabel passwordLabel = new JLabel("Password:");
-        passwordLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        passwordLabel.setForeground(MAROON);
-        mainPanel.add(passwordLabel, gbc);
-
-        gbc.gridx = 1;
-        passwordField = new JPasswordField(20);
+        // Password field
+        passwordField = new JPasswordField();
+        passwordField.setMaximumSize(new Dimension(280, 36));
+        passwordField.setPreferredSize(new Dimension(280, 36));
         passwordField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        mainPanel.add(passwordField, gbc);
+        passwordField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(BORDER_GRAY, 1),
+                BorderFactory.createEmptyBorder(8, 12, 8, 12)
+        ));
+        passwordField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(passwordField);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 8)));
 
-        // Demo note
-        gbc.gridy = 5;
-        gbc.gridx = 0;
-        gbc.gridwidth = 2;
-        JLabel noteLabel = new JLabel("Demo: juan.delacruz / password123  |  maria.santos / password123", SwingConstants.CENTER);
-        noteLabel.setFont(new Font("Segoe UI", Font.ITALIC, 10));
-        noteLabel.setForeground(Color.GRAY);
-        mainPanel.add(noteLabel, gbc);
-
-        // Message
-        gbc.gridy = 6;
-        messageLabel = new JLabel(" ", SwingConstants.CENTER);
+        // Message label
+        messageLabel = new JLabel(" ");
         messageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         messageLabel.setForeground(Color.RED);
-        mainPanel.add(messageLabel, gbc);
+        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(messageLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // Buttons
-        gbc.gridy = 7;
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
-        buttonPanel.setOpaque(false);
-
-        loginButton = new JButton("🐱 Login");
-        loginButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        // Sign In button
+        loginButton = new JButton("Sign In");
         loginButton.setBackground(MAROON);
-        loginButton.setForeground(GOLD);
+        loginButton.setForeground(WHITE);
+        loginButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
         loginButton.setFocusPainted(false);
-        loginButton.setPreferredSize(new Dimension(120, 40));
-        loginButton.setBorder(BorderFactory.createLineBorder(GOLD, 2));
+        loginButton.setBorderPainted(false);
+        loginButton.setMaximumSize(new Dimension(280, 42));
+        loginButton.setPreferredSize(new Dimension(280, 42));
+        loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        loginButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        loginButton.addActionListener(this);
+        centerPanel.add(loginButton);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 12)));
 
-        JButton registerButton = new JButton("📝 Register");
-        registerButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        registerButton.setBackground(DARK_MAROON);
-        registerButton.setForeground(Color.WHITE);
+        // OR label
+        JLabel orLabel = new JLabel("or");
+        orLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        orLabel.setForeground(Color.GRAY);
+        orLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(orLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 12)));
+
+        // Create account button
+        registerButton = new JButton("Create an account");
+        registerButton.setBackground(WHITE);
+        registerButton.setForeground(MAROON);
+        registerButton.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         registerButton.setFocusPainted(false);
-        registerButton.setPreferredSize(new Dimension(120, 40));
+        registerButton.setBorderPainted(false);
+        registerButton.setMaximumSize(new Dimension(280, 40));
+        registerButton.setPreferredSize(new Dimension(280, 40));
+        registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        registerButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        registerButton.addActionListener(this);
+        centerPanel.add(registerButton);
 
-        buttonPanel.add(loginButton);
-        buttonPanel.add(registerButton);
-        mainPanel.add(buttonPanel, gbc);
+        // Add to frame
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
 
         // Footer
-        gbc.gridy = 8;
-        JLabel footerLabel = new JLabel("🏛️ MSU-Iligan Institute of Technology | Cats on a Quest © 2024", SwingConstants.CENTER);
+        JPanel footerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        footerPanel.setBackground(LIGHT_BG);
+        JLabel footerLabel = new JLabel("CCC102 - Cats on a Quest");
         footerLabel.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        footerLabel.setForeground(MAROON);
-        mainPanel.add(footerLabel, gbc);
-
-        // Button Actions
-        loginButton.addActionListener(e -> handleLogin());
-        registerButton.addActionListener(e -> {
-            dispose();
-            new RegisterFrame().setVisible(true);
-        });
+        footerLabel.setForeground(Color.GRAY);
+        footerPanel.add(footerLabel);
+        mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == loginButton) {
+            handleLogin();
+        } else if (e.getSource() == registerButton) {
+            dispose();
+            new RegisterFrame().setVisible(true);
+        }
+    }
+
     private void handleLogin() {
-        String username = usernameField.getText().trim();
+        String email = emailField.getText().trim();
         String password = new String(passwordField.getPassword());
 
-        if (username.isEmpty() || password.isEmpty()) {
-            showMessage("❌ Please enter username and password", Color.RED);
+        if (email.isEmpty()) {
+            messageLabel.setText("Please enter your email");
+            messageLabel.setForeground(Color.RED);
             return;
         }
 
-        // SIMPLE LOGIN - just loop through the list
-        User loggedInUser = null;
-        for (User u : users) {
-            if (u.getUsername().equals(username) && u.getPassword().equals(password)) {
-                loggedInUser = u;
-                break;
-            }
+        if (password.isEmpty()) {
+            messageLabel.setText("Please enter your password");
+            messageLabel.setForeground(Color.RED);
+            return;
         }
 
-        if (loggedInUser != null) {
-            showMessage("✓ Welcome, " + loggedInUser.getFullName() + "!", new Color(0, 128, 0));
-            JOptionPane.showMessageDialog(this, "Login successful!\nWelcome " + loggedInUser.getFullName());
-            // TODO: Open MainFrame when Member 4 is ready
-            // dispose();
-            // new MainFrame(loggedInUser).setVisible(true);
+        User user = DataStore.login(email, password);
+
+        if (user != null) {
+            messageLabel.setText("Welcome, " + user.getFullName() + "!");
+            messageLabel.setForeground(new Color(0, 128, 0));
+            JOptionPane.showMessageDialog(this,
+                    "Login successful!\nWelcome " + user.getFullName(),
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+            passwordField.setText("");
         } else {
-            showMessage("❌ Invalid username or password", Color.RED);
+            messageLabel.setText("Invalid email or password");
+            messageLabel.setForeground(Color.RED);
         }
-    }
 
-    private void showMessage(String message, Color color) {
-        messageLabel.setText(message);
-        messageLabel.setForeground(color);
         Timer timer = new Timer(3000, e -> messageLabel.setText(" "));
         timer.setRepeats(false);
         timer.start();
-    }
-
-    // Public method so RegisterFrame can add new users
-    public static void addUser(User user) {
-        users.add(user);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
     }
 }
