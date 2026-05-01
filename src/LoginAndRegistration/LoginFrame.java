@@ -209,7 +209,15 @@ public class LoginFrame extends JFrame implements ActionListener {
 
             // Instead of just showing a popup, go to the main screen
             dispose(); // close the login window
-            new MainFrame(user.getFullName()).setVisible(true); // open the dashboard
+            dispose();
+            new DashboardAndApplicationManagement.MainFrame(
+                    user.getFullName(),
+                    user.getRole(),
+                    user.getEmail(),
+                    user.getCollege(),
+                    user.getCourse(),
+                    user.getIdNumber()
+            ).setVisible(true);
         } else {
             messageLabel.setText("Invalid email or password");
             messageLabel.setForeground(Color.RED);

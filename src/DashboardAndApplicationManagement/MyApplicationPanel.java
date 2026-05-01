@@ -1,4 +1,4 @@
 package DashboardAndApplicationManagement;
 
-public class MyApplicationPanel {
+ public class MyApplicationPanel {
 }
