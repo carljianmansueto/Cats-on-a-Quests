@@ -20,13 +20,12 @@ public class LoginFrame extends JFrame implements ActionListener {
     private static final Color LIGHT_BG = new Color(248, 248, 248);
     private static final Color WHITE = new Color(255,255,255);
     private static final Color BORDER_GRAY = new Color(220, 220, 220);
+    private static final Color GOLD = new Color(255, 215, 0);
 
     public LoginFrame() {
         setTitle("Cats on a Quest - Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 500);
-        setLocationRelativeTo(null);
-        setResizable(false);
         initUI();
     }
 
@@ -43,7 +42,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         // Title
         JLabel titleLabel = new JLabel("Cats on a Quest");
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 24));  // ← CHANGED
         titleLabel.setForeground(MAROON);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(titleLabel);
@@ -51,16 +50,16 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         // Subtitle
         JLabel subtitleLabel = new JLabel("MSU-IIT Job & Service Finder");
-        subtitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        subtitleLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));  // ← CHANGED
         subtitleLabel.setForeground(Color.GRAY);
         subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(subtitleLabel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 30)));
 
         // Email label
-        JLabel emailLabel = new JLabel("Email address");
-        emailLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        emailLabel.setForeground(Color.DARK_GRAY);
+        JLabel emailLabel = new JLabel("Email address: ");
+        emailLabel.setFont(new Font("SansSerif", Font.BOLD, 12));  // ← CHANGED
+        emailLabel.setForeground(MAROON);
         emailLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(emailLabel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
@@ -69,7 +68,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         emailField = new JTextField();
         emailField.setMaximumSize(new Dimension(280, 36));
         emailField.setPreferredSize(new Dimension(280, 36));
-        emailField.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        emailField.setFont(new Font("SansSerif", Font.PLAIN, 13));  // ← CHANGED
         emailField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(BORDER_GRAY, 1),
                 BorderFactory.createEmptyBorder(8, 12, 8, 12)
@@ -79,9 +78,9 @@ public class LoginFrame extends JFrame implements ActionListener {
         centerPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
         // Password label
-        JLabel passwordLabel = new JLabel("Password");
-        passwordLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        passwordLabel.setForeground(Color.DARK_GRAY);
+        JLabel passwordLabel = new JLabel("Password: ");
+        passwordLabel.setFont(new Font("SansSerif", Font.BOLD, 12));  // ← CHANGED
+        passwordLabel.setForeground(MAROON);
         passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(passwordLabel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
@@ -90,7 +89,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         passwordField = new JPasswordField();
         passwordField.setMaximumSize(new Dimension(280, 36));
         passwordField.setPreferredSize(new Dimension(280, 36));
-        passwordField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        passwordField.setFont(new Font("SansSerif", Font.PLAIN, 13));  // ← CHANGED
         passwordField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(BORDER_GRAY, 1),
                 BorderFactory.createEmptyBorder(8, 12, 8, 12)
@@ -101,17 +100,17 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         // Message label
         messageLabel = new JLabel(" ");
-        messageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        messageLabel.setFont(new Font("SansSerif", Font.PLAIN, 11));  // ← CHANGED
         messageLabel.setForeground(Color.RED);
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(messageLabel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // Sign In button
-        loginButton = new JButton("Sign In");
+        // Log In button
+        loginButton = new JButton("Log In");
         loginButton.setBackground(MAROON);
-        loginButton.setForeground(WHITE);
-        loginButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        loginButton.setForeground(GOLD);
+        loginButton.setFont(new Font("SansSerif", Font.BOLD, 14));  // ← CHANGED
         loginButton.setFocusPainted(false);
         loginButton.setBorderPainted(false);
         loginButton.setMaximumSize(new Dimension(280, 42));
@@ -123,8 +122,8 @@ public class LoginFrame extends JFrame implements ActionListener {
         centerPanel.add(Box.createRigidArea(new Dimension(0, 12)));
 
         // OR label
-        JLabel orLabel = new JLabel("or");
-        orLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        JLabel orLabel = new JLabel("— or —");
+        orLabel.setFont(new Font("SansSerif", Font.PLAIN, 11));  // ← CHANGED
         orLabel.setForeground(Color.GRAY);
         orLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(orLabel);
@@ -132,9 +131,9 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         // Create account button
         registerButton = new JButton("Create an account");
-        registerButton.setBackground(WHITE);
-        registerButton.setForeground(MAROON);
-        registerButton.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        registerButton.setBackground(MAROON);
+        registerButton.setForeground(GOLD);
+        registerButton.setFont(new Font("SansSerif", Font.BOLD, 14));  // ← CHANGED
         registerButton.setFocusPainted(false);
         registerButton.setBorderPainted(false);
         registerButton.setMaximumSize(new Dimension(280, 40));
@@ -151,7 +150,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         JPanel footerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         footerPanel.setBackground(LIGHT_BG);
         JLabel footerLabel = new JLabel("CCC102 - Cats on a Quest");
-        footerLabel.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        footerLabel.setFont(new Font("SansSerif", Font.PLAIN, 10));  // ← CHANGED
         footerLabel.setForeground(Color.GRAY);
         footerPanel.add(footerLabel);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
