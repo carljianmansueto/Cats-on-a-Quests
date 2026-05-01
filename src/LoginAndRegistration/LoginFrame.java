@@ -18,11 +18,11 @@ public class LoginFrame extends JFrame {
     // MSU-IIT Theme Colors
     private static final Color MAROON = new Color(128, 0, 0);
     private static final Color DARK_MAROON = new Color(102, 0, 0);
-    private static final Color LIGHT_MAROON_BG = new Color(255, 240, 240);
+    private static final Color WHITE = new Color(255, 255, 255);
     private static final Color GOLD = new Color(255, 215, 0);
 
     public LoginFrame() {
-        setTitle("🐱 Cats on a Quest - Login | MSU-IIT");
+        setTitle("Cats on a Quest - Login | MSU-IIT");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(450, 420);
         setLocationRelativeTo(null);
@@ -46,7 +46,7 @@ public class LoginFrame extends JFrame {
 
     private void initUI() {
         JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBackground(LIGHT_MAROON_BG);
+        mainPanel.setBackground(WHITE);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
