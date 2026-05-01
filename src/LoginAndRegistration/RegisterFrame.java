@@ -254,7 +254,7 @@ public class RegisterFrame extends JFrame implements ActionListener {
 
         if (fullName.isEmpty())    { showMessage("Please enter your full name"); return; }
         if (email.isEmpty())       { showMessage("Please enter your email"); return; }
-        if (!email.endsWith("@g.msuiit.edu.ph") && !email.endsWith("@msuiit.edu.ph")) {
+        if (!email.endsWith("@g.msuiit.edu.ph")) {
             showMessage("Email must be @g.msuiit.edu.ph"); return;
         }
         if (course.isEmpty())      { showMessage("Please enter your course"); return; }
