@@ -1,8 +1,8 @@
-package BrowseAndPostFeatures_Lopez;
+package BrowseAndPostFeatures;
 
-import DataAndModels_Retuta.DataStore;
-import DataAndModels_Retuta.JobListing;
-import DataAndModels_Retuta.User;
+import DataAndModels.DataStore;
+import DataAndModels.JobListing;
+import DataAndModels.User;
 
 import javax.swing.*;
 import java.awt.*;
