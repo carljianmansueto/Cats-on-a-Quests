@@ -1,5 +1,6 @@
 package LoginAndRegistration;
 
+import DashboardAndApplicationManagement.MainFrame;
 import DataAndModels.User;
 import DataAndModels.DataStore;
 
@@ -207,8 +208,8 @@ public class LoginFrame extends JFrame implements ActionListener {
                     "Success", JOptionPane.INFORMATION_MESSAGE);
 
             // Instead of just showing a popup, go to the main screen
-            //dispose(); // close the login window
-            // new MainFrame(user.getFullName()).setVisible(true); // open the dashboard
+            dispose(); // close the login window
+            new MainFrame(user.getFullName()).setVisible(true); // open the dashboard
         } else {
             messageLabel.setText("Invalid email or password");
             messageLabel.setForeground(Color.RED);
