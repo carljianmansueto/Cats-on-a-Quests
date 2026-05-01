@@ -9,13 +9,13 @@ import java.awt.event.*;
 
 public class LoginFrame extends JFrame implements ActionListener {
 
-    private JTextField emailField;
-    private JPasswordField passwordField;
-    private JButton loginButton;
-    private JButton registerButton;
-    private JLabel messageLabel;
+    private JTextField emailField;  // Text field where the user types their email
+    private JPasswordField passwordField;       // Password field for security so input is hidden
+    private JButton loginButton;        // Button that triggers the login process
+    private JButton registerButton;     // Button that opens the registration screen
+    private JLabel messageLabel;        // Label used to display messages like errors or success feedback
 
-    // Colors
+    // Color palette for the UI, grouped them here so it's easier to adjust the theme later
     private static final Color MAROON      = new Color(128, 0, 0);
     private static final Color LIGHT_BG    = new Color(248, 248, 248);
     private static final Color WHITE       = new Color(255, 255, 255);
@@ -23,18 +23,20 @@ public class LoginFrame extends JFrame implements ActionListener {
     private static final Color GOLD        = new Color(255, 215, 0);
 
     public LoginFrame() {
-        setTitle("Cats on a Quest - Login");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 500);
-        setLocationRelativeTo(null);
-        initUI();
+        setTitle("Cats on a Quest - Login");    // Set the window title shown on top of the frame
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   // Makes sure the application fully closes when this window is closed
+        setSize(400, 500);          // Fixed window size so layout stays consistent
+        setLocationRelativeTo(null);            // Centers the window on the screen when opened
+        initUI();         // Calls the method that builds and arranges all UI components
     }
 
     private void initUI() {
+        // Main container panel that holds everything
+        // Using BorderLayout to separate header, center, and footer easily
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(LIGHT_BG);
 
-        // ── Maroon header banner (title + subtitle only) ──────────
+        // This is the top part with the app name and subtitle
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
         headerPanel.setBackground(MAROON);
@@ -55,7 +57,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-        // ── Form area ─────────────────────────────────────────────
+        // This is where inputs and buttons are placed
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setBackground(WHITE);
@@ -91,7 +93,8 @@ public class LoginFrame extends JFrame implements ActionListener {
         centerPanel.add(passwordField);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 8)));
 
-        // Message label
+        // This is where validation messages appear
+        // Kept it blank at first so layout does not jump later
         messageLabel = new JLabel(" ");
         messageLabel.setFont(new Font("SansSerif", Font.PLAIN, 11));
         messageLabel.setForeground(Color.RED);
@@ -114,7 +117,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         centerPanel.add(loginButton);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 12)));
 
-        // OR label
+        // OR label, separates "Login" and "Create Account"
         JLabel orLabel = new JLabel("— or —");
         orLabel.setFont(new Font("SansSerif", Font.PLAIN, 11));
         orLabel.setForeground(Color.GRAY);
@@ -150,7 +153,8 @@ public class LoginFrame extends JFrame implements ActionListener {
         add(mainPanel);
     }
 
-    /** Label left-aligned within a 280px wrapper to match field width. */
+    // Helper method to keep labels aligned with input fields
+    // Without this, labels would not line up cleanly
     private JPanel leftLabel(String text) {
         JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         wrapper.setBackground(WHITE);
@@ -165,6 +169,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        // Identify which button triggered the event
         if (e.getSource() == loginButton) {
             handleLogin();
         } else if (e.getSource() == registerButton) {
@@ -177,6 +182,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         String email = emailField.getText().trim();
         String password = new String(passwordField.getPassword());
 
+        // Validator part
         if (email.isEmpty()) {
             messageLabel.setText("Please enter your email");
             messageLabel.setForeground(Color.RED);
@@ -189,6 +195,8 @@ public class LoginFrame extends JFrame implements ActionListener {
             return;
         }
 
+        // Authentication
+        // Calls the DataStore to check if credentials match
         User user = DataStore.login(email, password);
 
         if (user != null) {
@@ -206,6 +214,7 @@ public class LoginFrame extends JFrame implements ActionListener {
             messageLabel.setForeground(Color.RED);
         }
 
+        // Clear the message after 3 seconds so it does not stay on screen
         Timer timer = new Timer(3000, e -> messageLabel.setText(" "));
         timer.setRepeats(false);
         timer.start();
