@@ -197,7 +197,10 @@ public class LoginFrame extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(this,
                     "Login successful!\nWelcome " + user.getFullName(),
                     "Success", JOptionPane.INFORMATION_MESSAGE);
-            passwordField.setText("");
+
+            // Instead of just showing a popup, go to the main screen
+            // dispose(); // close the login window
+            // new MainFrame(user.getFullName()).setVisible(true); // open the dashboard
         } else {
             messageLabel.setText("Invalid email or password");
             messageLabel.setForeground(Color.RED);
