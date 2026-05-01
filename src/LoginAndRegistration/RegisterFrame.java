@@ -21,7 +21,7 @@ public class RegisterFrame extends JFrame implements ActionListener {
     private JButton backButton;
     private JLabel messageLabel;
 
-    // Same colors as LoginFrame
+    // Same color palette used
     private static final Color MAROON      = new Color(128, 0, 0);
     private static final Color LIGHT_BG    = new Color(248, 248, 248);
     private static final Color WHITE       = new Color(255, 255, 255);
