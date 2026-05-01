@@ -21,13 +21,14 @@ public class RegisterFrame extends JFrame implements ActionListener {
     private JButton backButton;
     private JLabel messageLabel;
 
-    private static final Color MAROON = new Color(128, 0, 0);
-    private static final Color LIGHT_BG = new Color(248, 248, 248);
-    private static final Color WHITE = Color.WHITE;
-    private static final Color BORDER_GRAY = new Color(200, 200, 200);
-    private static final Color GOLD = new Color(255, 215, 0);
+    // Same colors as LoginFrame
+    private static final Color MAROON      = new Color(128, 0, 0);
+    private static final Color LIGHT_BG    = new Color(248, 248, 248);
+    private static final Color WHITE       = new Color(255, 255, 255);
+    private static final Color BORDER_GRAY = new Color(220, 220, 220);
+    private static final Color GOLD        = new Color(255, 215, 0);
 
-    private static final String[] ROLES = {"STUDENT", "FACULTY", "ORGANIZATION"};
+    private static final String[] ROLES = {"Student", "Faculty", "Staff"};
     private static final String[] COLLEGES = {
             "College of Engineering and Technology",
             "College of Science and Mathematics",
@@ -35,13 +36,15 @@ public class RegisterFrame extends JFrame implements ActionListener {
             "College of Education",
             "College of Arts and Science",
             "College of Business Administration & Accountancy",
-            "College of Nursing"
+            "College of Nursing",
+            "Other"
     };
 
     public RegisterFrame() {
         setTitle("Cats on a Quest - Register");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(450, 600);
+        setSize(400, 620);
+        setLocationRelativeTo(null);
         initUI();
     }
 
@@ -49,246 +52,185 @@ public class RegisterFrame extends JFrame implements ActionListener {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(LIGHT_BG);
 
-        JPanel scrollContainer = new JPanel();
-        scrollContainer.setLayout(new BoxLayout(scrollContainer, BoxLayout.Y_AXIS));
-        scrollContainer.setBackground(LIGHT_BG);
+        // ── Maroon header banner (just like LoginFrame) ──────────
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+        headerPanel.setBackground(MAROON);
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(24, 40, 24, 40));
 
-        JPanel formPanel = new JPanel();
-        formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
-        formPanel.setBackground(WHITE);
-        formPanel.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
-        formPanel.setMaximumSize(new Dimension(380, 750));
-        formPanel.setPreferredSize(new Dimension(380, 750));
-
-        // Title
         JLabel titleLabel = new JLabel("Create an Account");
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 22));  // ← CHANGED
-        titleLabel.setForeground(MAROON);
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
+        titleLabel.setForeground(GOLD);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        formPanel.add(titleLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        headerPanel.add(titleLabel);
+        headerPanel.add(Box.createRigidArea(new Dimension(0, 6)));
 
-        // Subtitle
         JLabel subtitleLabel = new JLabel("Join the Cats on a Quest community");
-        subtitleLabel.setFont(new Font("SansSerif", Font.PLAIN, 11));  // ← CHANGED
-        subtitleLabel.setForeground(Color.GRAY);
+        subtitleLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        subtitleLabel.setForeground(new Color(255, 220, 220));
         subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        formPanel.add(subtitleLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 25)));
+        headerPanel.add(subtitleLabel);
 
-        // Full Name
-        JLabel nameLabel = new JLabel("Full Name");
-        nameLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));  // ← CHANGED
-        nameLabel.setForeground(MAROON);
-        nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(nameLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-        fullNameField = new JTextField();
-        fullNameField.setFont(new Font("SansSerif", Font.PLAIN, 13));  // ← CHANGED
-        fullNameField.setMaximumSize(new Dimension(340, 36));
-        fullNameField.setPreferredSize(new Dimension(340, 36));
-        fullNameField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(BORDER_GRAY, 1),
-                BorderFactory.createEmptyBorder(8, 12, 8, 12)
-        ));
-        fullNameField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(fullNameField);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        // Center panel — same structure as LoginFrame
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setBackground(WHITE);
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
 
-        // Email
-        JLabel emailLabel = new JLabel("Email");
-        emailLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));  // ← CHANGED
-        emailLabel.setForeground(MAROON);
-        emailLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(emailLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        // Fields
+        addLabel(centerPanel, "Full Name");
+        fullNameField = addTextField(centerPanel);
 
-        emailField = new JTextField();
-        emailField.setFont(new Font("SansSerif", Font.PLAIN, 13));  // ← CHANGED
-        emailField.setMaximumSize(new Dimension(340, 36));
-        emailField.setPreferredSize(new Dimension(340, 36));
-        emailField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(BORDER_GRAY, 1),
-                BorderFactory.createEmptyBorder(8, 12, 8, 12)
-        ));
-        emailField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(emailField);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        addLabel(centerPanel, "Email");
+        emailField = addTextField(centerPanel);
 
-        // Role
-        JLabel roleLabel = new JLabel("Role");
-        roleLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));  // ← CHANGED
-        roleLabel.setForeground(MAROON);
-        roleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(roleLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        addLabel(centerPanel, "Role");
+        roleCombo = addComboBox(centerPanel, ROLES);
 
-        roleCombo = new JComboBox<>(ROLES);
-        roleCombo.setFont(new Font("SansSerif", Font.PLAIN, 13));  // ← CHANGED
-        roleCombo.setMaximumSize(new Dimension(340, 36));
-        roleCombo.setPreferredSize(new Dimension(340, 36));
-        roleCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(roleCombo);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        addLabel(centerPanel, "College");
+        collegeCombo = addComboBox(centerPanel, COLLEGES);
 
-        // College
-        JLabel collegeLabel = new JLabel("College");
-        collegeLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));  // ← CHANGED
-        collegeLabel.setForeground(MAROON);
-        collegeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(collegeLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        addLabel(centerPanel, "Course");
+        courseField = addTextField(centerPanel);
 
-        collegeCombo = new JComboBox<>(COLLEGES);
-        collegeCombo.setFont(new Font("SansSerif", Font.PLAIN, 13));  // ← CHANGED
-        collegeCombo.setMaximumSize(new Dimension(340, 36));
-        collegeCombo.setPreferredSize(new Dimension(340, 36));
-        collegeCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(collegeCombo);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        addLabel(centerPanel, "ID Number");
+        idNumberField = addTextField(centerPanel);
 
-        // Course
-        JLabel courseLabel = new JLabel("Course");
-        courseLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));  // ← CHANGED
-        courseLabel.setForeground(MAROON);
-        courseLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(courseLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        addLabel(centerPanel, "Password");
+        passwordField = addPasswordField(centerPanel);
 
-        courseField = new JTextField();
-        courseField.setFont(new Font("SansSerif", Font.PLAIN, 13));  // ← CHANGED
-        courseField.setMaximumSize(new Dimension(340, 36));
-        courseField.setPreferredSize(new Dimension(340, 36));
-        courseField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(BORDER_GRAY, 1),
-                BorderFactory.createEmptyBorder(8, 12, 8, 12)
-        ));
-        courseField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(courseField);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        addLabel(centerPanel, "Confirm Password");
+        confirmField = addPasswordField(centerPanel);
 
-        // ID Number
-        JLabel idLabel = new JLabel("ID Number");
-        idLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));  // ← CHANGED
-        idLabel.setForeground(MAROON);
-        idLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(idLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-
-        idNumberField = new JTextField();
-        idNumberField.setFont(new Font("SansSerif", Font.PLAIN, 13));  // ← CHANGED
-        idNumberField.setMaximumSize(new Dimension(340, 36));
-        idNumberField.setPreferredSize(new Dimension(340, 36));
-        idNumberField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(BORDER_GRAY, 1),
-                BorderFactory.createEmptyBorder(8, 12, 8, 12)
-        ));
-        idNumberField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(idNumberField);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-
-        // Password
-        JLabel passwordLabel = new JLabel("Password");
-        passwordLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));  // ← CHANGED
-        passwordLabel.setForeground(MAROON);
-        passwordLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(passwordLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-
-        passwordField = new JPasswordField();
-        passwordField.setFont(new Font("SansSerif", Font.PLAIN, 13));  // ← CHANGED
-        passwordField.setMaximumSize(new Dimension(340, 36));
-        passwordField.setPreferredSize(new Dimension(340, 36));
-        passwordField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(BORDER_GRAY, 1),
-                BorderFactory.createEmptyBorder(8, 12, 8, 12)
-        ));
-        passwordField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(passwordField);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-
-        // Confirm Password
-        JLabel confirmLabel = new JLabel("Confirm Password");
-        confirmLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));  // ← CHANGED
-        confirmLabel.setForeground(MAROON);
-        confirmLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(confirmLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-
-        confirmField = new JPasswordField();
-        confirmField.setFont(new Font("SansSerif", Font.PLAIN, 13));  // ← CHANGED
-        confirmField.setMaximumSize(new Dimension(340, 36));
-        confirmField.setPreferredSize(new Dimension(340, 36));
-        confirmField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(BORDER_GRAY, 1),
-                BorderFactory.createEmptyBorder(8, 12, 8, 12)
-        ));
-        confirmField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(confirmField);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-
-        // Message
+        // Message label
         messageLabel = new JLabel(" ");
-        messageLabel.setFont(new Font("SansSerif", Font.PLAIN, 11));  // ← CHANGED
+        messageLabel.setFont(new Font("SansSerif", Font.PLAIN, 11));
         messageLabel.setForeground(Color.RED);
-        messageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        formPanel.add(messageLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(messageLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 12)));
 
-        // Register button
+        // Register button — same style as loginButton
         registerButton = new JButton("Create Account");
         registerButton.setBackground(MAROON);
         registerButton.setForeground(GOLD);
-        registerButton.setFont(new Font("SansSerif", Font.BOLD, 14));  // ← CHANGED
+        registerButton.setFont(new Font("SansSerif", Font.BOLD, 14));
         registerButton.setFocusPainted(false);
         registerButton.setBorderPainted(false);
-        registerButton.setMaximumSize(new Dimension(340, 42));
-        registerButton.setPreferredSize(new Dimension(340, 42));
+        registerButton.setMaximumSize(new Dimension(280, 42));
+        registerButton.setPreferredSize(new Dimension(280, 42));
         registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         registerButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         registerButton.addActionListener(this);
-        formPanel.add(registerButton);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        centerPanel.add(registerButton);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 12)));
 
-        // Back button
-        backButton = new JButton("← Back to Login");
+        // OR label
+        JLabel orLabel = new JLabel("— or —");
+        orLabel.setFont(new Font("SansSerif", Font.PLAIN, 11));
+        orLabel.setForeground(Color.GRAY);
+        orLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(orLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 12)));
+
+        // Back button — same style as registerButton in LoginFrame
+        backButton = new JButton("Back to Login");
         backButton.setBackground(MAROON);
         backButton.setForeground(GOLD);
-        backButton.setFont(new Font("SansSerif", Font.PLAIN, 12));  // ← CHANGED
+        backButton.setFont(new Font("SansSerif", Font.BOLD, 14));
         backButton.setFocusPainted(false);
         backButton.setBorderPainted(false);
-        backButton.setMaximumSize(new Dimension(340, 35));
-        backButton.setPreferredSize(new Dimension(340, 35));
+        backButton.setMaximumSize(new Dimension(280, 40));
+        backButton.setPreferredSize(new Dimension(280, 40));
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backButton.addActionListener(this);
-        formPanel.add(backButton);
+        centerPanel.add(backButton);
 
-        scrollContainer.add(Box.createVerticalGlue());
-        scrollContainer.add(formPanel);
-        scrollContainer.add(Box.createVerticalGlue());
-
-        JScrollPane scrollPane = new JScrollPane(scrollContainer);
+        // Scroll pane in case window is short
+        JScrollPane scrollPane = new JScrollPane(centerPanel);
         scrollPane.setBorder(null);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.getViewport().setBackground(LIGHT_BG);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(12);
+        scrollPane.getViewport().setBackground(WHITE);
 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Footer
+        // Footer — same as LoginFrame
         JPanel footerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         footerPanel.setBackground(LIGHT_BG);
         JLabel footerLabel = new JLabel("CCC102 - Cats on a Quest");
-        footerLabel.setFont(new Font("SansSerif", Font.PLAIN, 10));  // ← CHANGED
+        footerLabel.setFont(new Font("SansSerif", Font.PLAIN, 10));
         footerLabel.setForeground(Color.GRAY);
         footerPanel.add(footerLabel);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
     }
+
+    // ── Helpers (same field sizing/style as LoginFrame) ──────────
+
+    private void addLabel(JPanel panel, String text) {
+        // Wrap in a 280px-wide panel so the label hugs the left edge of the fields
+        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        wrapper.setBackground(WHITE);
+        wrapper.setMaximumSize(new Dimension(280, 20));
+        wrapper.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel label = new JLabel(text + ":");
+        label.setFont(new Font("SansSerif", Font.BOLD, 12));
+        label.setForeground(MAROON);
+        wrapper.add(label);
+
+        panel.add(wrapper);
+        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+    }
+
+    private JTextField addTextField(JPanel panel) {
+        JTextField field = new JTextField();
+        field.setMaximumSize(new Dimension(280, 36));
+        field.setPreferredSize(new Dimension(280, 36));
+        field.setFont(new Font("SansSerif", Font.PLAIN, 13));
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(BORDER_GRAY, 1),
+                BorderFactory.createEmptyBorder(8, 12, 8, 12)
+        ));
+        field.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(field);
+        panel.add(Box.createRigidArea(new Dimension(0, 12)));
+        return field;
+    }
+
+    private JPasswordField addPasswordField(JPanel panel) {
+        JPasswordField field = new JPasswordField();
+        field.setMaximumSize(new Dimension(280, 36));
+        field.setPreferredSize(new Dimension(280, 36));
+        field.setFont(new Font("SansSerif", Font.PLAIN, 13));
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(BORDER_GRAY, 1),
+                BorderFactory.createEmptyBorder(8, 12, 8, 12)
+        ));
+        field.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(field);
+        panel.add(Box.createRigidArea(new Dimension(0, 12)));
+        return field;
+    }
+
+    private JComboBox<String> addComboBox(JPanel panel, String[] items) {
+        JComboBox<String> combo = new JComboBox<>(items);
+        combo.setMaximumSize(new Dimension(280, 36));
+        combo.setPreferredSize(new Dimension(280, 36));
+        combo.setFont(new Font("SansSerif", Font.PLAIN, 13));
+        combo.setBackground(WHITE);
+        combo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(combo);
+        panel.add(Box.createRigidArea(new Dimension(0, 12)));
+        return combo;
+    }
+
+    // ── Logic ────────────────────────────────────────────────────
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -302,66 +244,44 @@ public class RegisterFrame extends JFrame implements ActionListener {
 
     private void handleRegister() {
         String fullName = fullNameField.getText().trim();
-        String email = emailField.getText().trim();
-        String role = (String) roleCombo.getSelectedItem();
-        String college = (String) collegeCombo.getSelectedItem();
-        String course = courseField.getText().trim();
+        String email    = emailField.getText().trim();
+        String role     = (String) roleCombo.getSelectedItem();
+        String college  = (String) collegeCombo.getSelectedItem();
+        String course   = courseField.getText().trim();
         String idNumber = idNumberField.getText().trim();
         String password = new String(passwordField.getPassword());
-        String confirm = new String(confirmField.getPassword());
+        String confirm  = new String(confirmField.getPassword());
 
-        if (fullName.isEmpty()) {
-            messageLabel.setText("Please enter your full name");
-            return;
+        if (fullName.isEmpty())    { showMessage("Please enter your full name"); return; }
+        if (email.isEmpty())       { showMessage("Please enter your email"); return; }
+        if (!email.endsWith("@g.msuiit.edu.ph") && !email.endsWith("@msuiit.edu.ph")) {
+            showMessage("Email must be @g.msuiit.edu.ph"); return;
         }
-
-        if (email.isEmpty()) {
-            messageLabel.setText("Please enter your email");
-            return;
-        }
-
-        if (!email.endsWith("@g.msuiit.edu.ph")) {
-            messageLabel.setText("Email must be @g.msuiit.edu.ph");
-            return;
-        }
-
-        if (course.isEmpty()) {
-            messageLabel.setText("Please enter your course");
-            return;
-        }
-
-        if (idNumber.isEmpty()) {
-            messageLabel.setText("Please enter your ID number");
-            return;
-        }
-
-        if (password.isEmpty()) {
-            messageLabel.setText("Please enter a password");
-            return;
-        }
-
-        if (password.length() < 6) {
-            messageLabel.setText("Password must be at least 6 characters");
-            return;
-        }
-
-        if (!password.equals(confirm)) {
-            messageLabel.setText("Passwords do not match");
-            return;
-        }
+        if (course.isEmpty())      { showMessage("Please enter your course"); return; }
+        if (idNumber.isEmpty())    { showMessage("Please enter your ID number"); return; }
+        if (password.isEmpty())    { showMessage("Please enter a password"); return; }
+        if (password.length() < 6) { showMessage("Password must be at least 6 characters"); return; }
+        if (!password.equals(confirm)) { showMessage("Passwords do not match"); return; }
 
         User newUser = new User(fullName, password, email, role, college, course, idNumber);
         String error = DataStore.register(newUser);
 
         if (error == null) {
             JOptionPane.showMessageDialog(this,
-                    "✓ Registration successful!\nYou can now login with: " + email,
+                    "Registration successful!\nYou can now login with: " + email,
                     "Success", JOptionPane.INFORMATION_MESSAGE);
             dispose();
             new LoginFrame().setVisible(true);
         } else {
-            messageLabel.setText(error);
-            messageLabel.setForeground(Color.RED);
+            showMessage(error);
         }
+    }
+
+    private void showMessage(String msg) {
+        messageLabel.setText(msg);
+        messageLabel.setForeground(Color.RED);
+        Timer timer = new Timer(3000, e -> messageLabel.setText(" "));
+        timer.setRepeats(false);
+        timer.start();
     }
 }

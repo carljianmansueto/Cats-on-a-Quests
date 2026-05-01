@@ -16,59 +16,58 @@ public class LoginFrame extends JFrame implements ActionListener {
     private JLabel messageLabel;
 
     // Colors
-    private static final Color MAROON = new Color(128, 0, 0);
-    private static final Color LIGHT_BG = new Color(248, 248, 248);
-    private static final Color WHITE = new Color(255,255,255);
+    private static final Color MAROON      = new Color(128, 0, 0);
+    private static final Color LIGHT_BG    = new Color(248, 248, 248);
+    private static final Color WHITE       = new Color(255, 255, 255);
     private static final Color BORDER_GRAY = new Color(220, 220, 220);
-    private static final Color GOLD = new Color(255, 215, 0);
+    private static final Color GOLD        = new Color(255, 215, 0);
 
     public LoginFrame() {
         setTitle("Cats on a Quest - Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 500);
+        setLocationRelativeTo(null);
         initUI();
     }
 
     private void initUI() {
-        // Main panel
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(LIGHT_BG);
 
-        // Center panel with BoxLayout
+        // ── Maroon header banner (title + subtitle only) ──────────
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+        headerPanel.setBackground(MAROON);
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(24, 40, 24, 40));
+
+        JLabel titleLabel = new JLabel("Cats on a Quest");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
+        titleLabel.setForeground(GOLD);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        headerPanel.add(titleLabel);
+        headerPanel.add(Box.createRigidArea(new Dimension(0, 6)));
+
+        JLabel subtitleLabel = new JLabel("MSU-IIT Job & Service Finder");
+        subtitleLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        subtitleLabel.setForeground(new Color(255, 220, 220));
+        subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        headerPanel.add(subtitleLabel);
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+
+        // ── Form area ─────────────────────────────────────────────
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setBackground(WHITE);
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(30, 40, 40, 40));
 
-        // Title
-        JLabel titleLabel = new JLabel("Cats on a Quest");
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 24));  // ← CHANGED
-        titleLabel.setForeground(MAROON);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerPanel.add(titleLabel);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 8)));
-
-        // Subtitle
-        JLabel subtitleLabel = new JLabel("MSU-IIT Job & Service Finder");
-        subtitleLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));  // ← CHANGED
-        subtitleLabel.setForeground(Color.GRAY);
-        subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerPanel.add(subtitleLabel);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 30)));
-
-        // Email label
-        JLabel emailLabel = new JLabel("Email address: ");
-        emailLabel.setFont(new Font("SansSerif", Font.BOLD, 12));  // ← CHANGED
-        emailLabel.setForeground(MAROON);
-        emailLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerPanel.add(emailLabel);
+        // Email label + field
+        centerPanel.add(leftLabel("Email address:"));
         centerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-
-        // Email field
         emailField = new JTextField();
         emailField.setMaximumSize(new Dimension(280, 36));
         emailField.setPreferredSize(new Dimension(280, 36));
-        emailField.setFont(new Font("SansSerif", Font.PLAIN, 13));  // ← CHANGED
+        emailField.setFont(new Font("SansSerif", Font.PLAIN, 13));
         emailField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(BORDER_GRAY, 1),
                 BorderFactory.createEmptyBorder(8, 12, 8, 12)
@@ -77,19 +76,13 @@ public class LoginFrame extends JFrame implements ActionListener {
         centerPanel.add(emailField);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        // Password label
-        JLabel passwordLabel = new JLabel("Password: ");
-        passwordLabel.setFont(new Font("SansSerif", Font.BOLD, 12));  // ← CHANGED
-        passwordLabel.setForeground(MAROON);
-        passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerPanel.add(passwordLabel);
+        // Password label + field
+        centerPanel.add(leftLabel("Password:"));
         centerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-
-        // Password field
         passwordField = new JPasswordField();
         passwordField.setMaximumSize(new Dimension(280, 36));
         passwordField.setPreferredSize(new Dimension(280, 36));
-        passwordField.setFont(new Font("SansSerif", Font.PLAIN, 13));  // ← CHANGED
+        passwordField.setFont(new Font("SansSerif", Font.PLAIN, 13));
         passwordField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(BORDER_GRAY, 1),
                 BorderFactory.createEmptyBorder(8, 12, 8, 12)
@@ -100,7 +93,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         // Message label
         messageLabel = new JLabel(" ");
-        messageLabel.setFont(new Font("SansSerif", Font.PLAIN, 11));  // ← CHANGED
+        messageLabel.setFont(new Font("SansSerif", Font.PLAIN, 11));
         messageLabel.setForeground(Color.RED);
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(messageLabel);
@@ -110,7 +103,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         loginButton = new JButton("Log In");
         loginButton.setBackground(MAROON);
         loginButton.setForeground(GOLD);
-        loginButton.setFont(new Font("SansSerif", Font.BOLD, 14));  // ← CHANGED
+        loginButton.setFont(new Font("SansSerif", Font.BOLD, 14));
         loginButton.setFocusPainted(false);
         loginButton.setBorderPainted(false);
         loginButton.setMaximumSize(new Dimension(280, 42));
@@ -123,7 +116,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         // OR label
         JLabel orLabel = new JLabel("— or —");
-        orLabel.setFont(new Font("SansSerif", Font.PLAIN, 11));  // ← CHANGED
+        orLabel.setFont(new Font("SansSerif", Font.PLAIN, 11));
         orLabel.setForeground(Color.GRAY);
         orLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(orLabel);
@@ -133,7 +126,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         registerButton = new JButton("Create an account");
         registerButton.setBackground(MAROON);
         registerButton.setForeground(GOLD);
-        registerButton.setFont(new Font("SansSerif", Font.BOLD, 14));  // ← CHANGED
+        registerButton.setFont(new Font("SansSerif", Font.BOLD, 14));
         registerButton.setFocusPainted(false);
         registerButton.setBorderPainted(false);
         registerButton.setMaximumSize(new Dimension(280, 40));
@@ -143,19 +136,31 @@ public class LoginFrame extends JFrame implements ActionListener {
         registerButton.addActionListener(this);
         centerPanel.add(registerButton);
 
-        // Add to frame
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
         // Footer
         JPanel footerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         footerPanel.setBackground(LIGHT_BG);
         JLabel footerLabel = new JLabel("CCC102 - Cats on a Quest");
-        footerLabel.setFont(new Font("SansSerif", Font.PLAIN, 10));  // ← CHANGED
+        footerLabel.setFont(new Font("SansSerif", Font.PLAIN, 10));
         footerLabel.setForeground(Color.GRAY);
         footerPanel.add(footerLabel);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
+    }
+
+    /** Label left-aligned within a 280px wrapper to match field width. */
+    private JPanel leftLabel(String text) {
+        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        wrapper.setBackground(WHITE);
+        wrapper.setMaximumSize(new Dimension(280, 20));
+        wrapper.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("SansSerif", Font.BOLD, 12));
+        label.setForeground(MAROON);
+        wrapper.add(label);
+        return wrapper;
     }
 
     @Override
