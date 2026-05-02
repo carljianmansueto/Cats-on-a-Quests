@@ -1,6 +1,5 @@
 package LoginAndRegistration;
 
-import DashboardAndApplicationManagement.MainFrame;
 import DataAndModels.User;
 import DataAndModels.DataStore;
 
@@ -207,8 +206,7 @@ public class LoginFrame extends JFrame implements ActionListener {
                     "Login successful!\nWelcome " + user.getFullName(),
                     "Success", JOptionPane.INFORMATION_MESSAGE);
 
-            // Instead of just showing a popup, go to the main screen
-            dispose(); // close the login window
+            // Closes the login screen and proceed to main screen
             dispose();
             new DashboardAndApplicationManagement.MainFrame(
                     user.getFullName(),
