@@ -209,7 +209,6 @@ public class LoginFrame extends JFrame implements ActionListener {
 
             // Instead of just showing a popup, go to the main screen
             dispose(); // close the login window
-            dispose();
             new DashboardAndApplicationManagement.MainFrame(
                     user.getFullName(),
                     user.getRole(),

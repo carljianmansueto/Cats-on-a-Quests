@@ -1,0 +1,4 @@
+Juan Dela Cruz|password123|juan.delacruz@g.msuiit.edu.ph|STUDENT|College of Engineering|BS Computer Engineering|2021-00001
+Maria Santos|password123|maria.santos@g.msuiit.edu.ph|STUDENT|College of Science and Mathematics|BS Biology|2021-00002
+Dr. Ana Reyes|faculty123|ana.reyes@msuiit.edu.ph|FACULTY|College of Engineering|PhD in Engineering|FAC-0001
+CS Student Organization|org12345|csso@g.msuiit.edu.ph|ORGANIZATION|College of Computer Studies|Computer Science|ORG-001
