@@ -252,20 +252,21 @@ public class RegisterFrame extends JFrame implements ActionListener {
         String password = new String(passwordField.getPassword());
         String confirm  = new String(confirmField.getPassword());
 
+        //Validator part, checks whether user input a correct info
         if (fullName.isEmpty())    { showMessage("Please enter your full name"); return; }
         if (email.isEmpty())       { showMessage("Please enter your email"); return; }
-        if (!email.endsWith("@g.msuiit.edu.ph")) {
-            showMessage("Email must be @g.msuiit.edu.ph"); return;
-        }
+        if (!email.endsWith("@g.msuiit.edu.ph")) { showMessage("Email must be @g.msuiit.edu.ph"); return;}
         if (course.isEmpty())      { showMessage("Please enter your course"); return; }
         if (idNumber.isEmpty())    { showMessage("Please enter your ID number"); return; }
         if (password.isEmpty())    { showMessage("Please enter a password"); return; }
         if (password.length() < 6) { showMessage("Password must be at least 6 characters"); return; }
         if (!password.equals(confirm)) { showMessage("Passwords do not match"); return; }
 
+        //Registers the user after creating the account and put it in the data store
         User newUser = new User(fullName, password, email, role, college, course, idNumber);
         String error = DataStore.register(newUser);
 
+        //
         if (error == null) {
             JOptionPane.showMessageDialog(this,
                     "Registration successful!\nYou can now login with: " + email,
