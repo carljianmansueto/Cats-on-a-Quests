@@ -15,11 +15,11 @@ import java.awt.event.*;
 
 public class MainFrame extends JFrame {
 
-    private static final Color MAROON = new Color(128, 0, 0);
-    private static final Color MAROON_DARK = new Color(90, 0, 0);
-    private static final Color LIGHT_BG = new Color(248, 245, 245);
-    private static final Color WHITE = Color.WHITE;
-    private static final Color GOLD = new Color(255, 215, 0);
+    private static final Color MAROON       = new Color(128, 0, 0);
+    private static final Color MAROON_DARK  = new Color(90, 0, 0);
+    private static final Color LIGHT_BG     = new Color(248, 245, 245);
+    private static final Color WHITE        = Color.WHITE;
+    private static final Color GOLD         = new Color(255, 215, 0);
     private static final Color BORDER_COLOR = new Color(200, 180, 180);
 
     // User info — passed in from LoginFrame as 6 individual Strings
@@ -30,31 +30,31 @@ public class MainFrame extends JFrame {
     private final String course;
     private final String idNumber;
 
-    private JPanel contentArea;
+    private JPanel     contentArea;
     private CardLayout cardLayout;
 
     // CardLayout panel name constants
-    public static final String PANEL_BROWSE = "BROWSE";
-    public static final String PANEL_POST = "POST";
-    public static final String PANEL_MYLIST = "MY_LISTINGS";
-    public static final String PANEL_MYAPPS = "MY_APPLICATIONS";
+    public static final String PANEL_BROWSE  = "BROWSE";
+    public static final String PANEL_POST    = "POST";
+    public static final String PANEL_MYLIST  = "MY_LISTINGS";
+    public static final String PANEL_MYAPPS  = "MY_APPLICATIONS";
 
     // Sidebar nav buttons
     private JButton btnBrowse, btnPost, btnMyListings, btnMyApps;
 
     /**
      * Called by LoginFrame after successful login:
-     * new MainFrame(user.getFullName(), user.getRole(), user.getEmail(),
-     * user.getCollege(), user.getCourse(), user.getIdNumber())
-     * .setVisible(true);
+     *   new MainFrame(user.getFullName(), user.getRole(), user.getEmail(),
+     *                 user.getCollege(), user.getCourse(), user.getIdNumber())
+     *                 .setVisible(true);
      */
     public MainFrame(String fullName, String role, String email,
                      String college, String course, String idNumber) {
         this.fullName = fullName;
-        this.role = role;
-        this.email = email;
-        this.college = college;
-        this.course = course;
+        this.role     = role;
+        this.email    = email;
+        this.college  = college;
+        this.course   = course;
         this.idNumber = idNumber;
 
         setTitle("Cats on a Quest - Dashboard");
@@ -69,10 +69,10 @@ public class MainFrame extends JFrame {
 
     private void buildUI() {
         setLayout(new BorderLayout());
-        add(buildHeader(), BorderLayout.NORTH);
+        add(buildHeader(),  BorderLayout.NORTH);
         add(buildSidebar(), BorderLayout.WEST);
 
-        cardLayout = new CardLayout();
+        cardLayout  = new CardLayout();
         contentArea = new JPanel(cardLayout);
         contentArea.setBackground(LIGHT_BG);
 
@@ -80,10 +80,10 @@ public class MainFrame extends JFrame {
         // so BrowsePanel and PostPanel receive a proper User object
         User userObj = DataStore.findUserByEmail(email);
 
-        contentArea.add(new BrowsePanel(userObj), PANEL_BROWSE);
-        contentArea.add(new PostPanel(userObj), PANEL_POST);
-        contentArea.add(new MyListingPanel(email), PANEL_MYLIST);
-        contentArea.add(new MyApplicationPanel(email), PANEL_MYAPPS);
+        contentArea.add(new BrowsePanel(userObj),          PANEL_BROWSE);
+        contentArea.add(new PostPanel(userObj),            PANEL_POST);
+        contentArea.add(new MyListingPanel(email),         PANEL_MYLIST);
+        contentArea.add(new MyApplicationPanel(email),     PANEL_MYAPPS);
 
         add(contentArea, BorderLayout.CENTER);
     }
@@ -196,10 +196,10 @@ public class MainFrame extends JFrame {
         sidebar.add(sep);
         sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        btnBrowse = navButton("🔍  Browse Jobs", PANEL_BROWSE);
-        btnPost = navButton("➕  Post a Job", PANEL_POST);
-        btnMyListings = navButton("📋  My Listings", PANEL_MYLIST);
-        btnMyApps = navButton("📩  My Applications", PANEL_MYAPPS);
+        btnBrowse     = navButton("🔍  Browse Jobs",     PANEL_BROWSE);
+        btnPost       = navButton("➕  Post a Job",       PANEL_POST);
+        btnMyListings = navButton("📋  My Listings",      PANEL_MYLIST);
+        btnMyApps     = navButton("📩  My Applications",  PANEL_MYAPPS);
 
         sidebar.add(btnBrowse);
         sidebar.add(Box.createRigidArea(new Dimension(0, 4)));
@@ -239,7 +239,6 @@ public class MainFrame extends JFrame {
                 if (!btn.getBackground().equals(GOLD))
                     btn.setBackground(MAROON);
             }
-
             public void mouseExited(MouseEvent e) {
                 if (!btn.getBackground().equals(GOLD))
                     btn.setBackground(MAROON_DARK);
@@ -261,18 +260,10 @@ public class MainFrame extends JFrame {
         // Highlight the active button in gold
         JButton active;
         switch (panelName) {
-            case PANEL_POST:
-                active = btnPost;
-                break;
-            case PANEL_MYLIST:
-                active = btnMyListings;
-                break;
-            case PANEL_MYAPPS:
-                active = btnMyApps;
-                break;
-            default:
-                active = btnBrowse;
-                break;
+            case PANEL_POST:   active = btnPost;       break;
+            case PANEL_MYLIST: active = btnMyListings; break;
+            case PANEL_MYAPPS: active = btnMyApps;     break;
+            default:           active = btnBrowse;     break;
         }
         active.setBackground(GOLD);
         active.setForeground(MAROON_DARK);
@@ -291,17 +282,9 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public String getRole() {
-        return role;
-    }
+    public String getEmail()    { return email; }
+    public String getFullName() { return fullName; }
+    public String getRole()     { return role; }
 
     private void handleLogout() {
         int choice = JOptionPane.showConfirmDialog(
@@ -316,4 +299,3 @@ public class MainFrame extends JFrame {
             SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
         }
     }
-}
