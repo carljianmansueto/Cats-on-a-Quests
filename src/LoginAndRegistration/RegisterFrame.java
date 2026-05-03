@@ -29,16 +29,7 @@ public class RegisterFrame extends JFrame implements ActionListener {
     private static final Color GOLD        = new Color(255, 215, 0);
 
     private static final String[] ROLES = {"Student", "Faculty", "Staff"};
-    private static final String[] COLLEGES = {
-            "College of Engineering and Technology",
-            "College of Science and Mathematics",
-            "College of Computer Studies",
-            "College of Education",
-            "College of Arts and Science",
-            "College of Business Administration & Accountancy",
-            "College of Nursing",
-            "Other"
-    };
+    private static final String[] COLLEGES = { "College of Engineering and Technology", "College of Science and Mathematics", "College of Computer Studies", "College of Education", "College of Arts and Science", "College of Business Administration & Accountancy", "College of Nursing", "Other"};
 
     public RegisterFrame() {
         setTitle("Cats on a Quest - Register");

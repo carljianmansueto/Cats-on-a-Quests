@@ -11,24 +11,20 @@ import java.util.ArrayList;
 
 public class BrowsePanel extends JPanel {
 
-    // Colors — matched to LoginFrame and RegisterFrame maroon theme
-    private static final Color MAROON       = new Color(128, 0, 0);
-    private static final Color LIGHT_BG     = new Color(248, 245, 245);
-    private static final Color CARD_WHITE   = Color.WHITE;
-    private static final Color BORDER_COLOR = new Color(200, 180, 180);
-    private static final Color GOLD         = new Color(255, 215, 0);
+    private static final Color MAROON        = new Color(128, 0, 0);
+    private static final Color LIGHT_BG      = new Color(248, 245, 245);
+    private static final Color CARD_WHITE    = Color.WHITE;
+    private static final Color CARD_EXPANDED = new Color(255, 249, 249);
+    private static final Color BORDER_COLOR  = new Color(200, 180, 180);
+    private static final Color BORDER_ACTIVE = new Color(128, 0, 0);
+    private static final Color GOLD          = new Color(255, 215, 0);
 
-    // The currently logged-in user — passed in from MainFrame
-    private User currentUser;
-
-    // UI components we need to access across methods
+    private User              currentUser;
     private JPanel            listingsPanel;
     private JTextField        searchField;
     private JComboBox<String> categoryFilter;
     private JLabel            resultLabel;
 
-    // Constructor
-  
     public BrowsePanel(User user) {
         this.currentUser = user;
         setLayout(new BorderLayout(0, 0));
@@ -37,17 +33,14 @@ public class BrowsePanel extends JPanel {
         loadListings("", "All Categories");
     }
 
-    // Build the full panel layout
-  
     private void buildUI() {
-
-        // Top bar: title + search + filter
+        // Top bar
         JPanel topBar = new JPanel(new BorderLayout(10, 0));
         topBar.setBackground(MAROON);
         topBar.setBorder(BorderFactory.createEmptyBorder(14, 20, 14, 20));
 
         JLabel titleLabel = new JLabel("Browse Jobs & Services");
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
         titleLabel.setForeground(Color.WHITE);
 
         JPanel searchRow = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
@@ -55,28 +48,24 @@ public class BrowsePanel extends JPanel {
 
         JLabel searchLabel = new JLabel("Search:");
         searchLabel.setForeground(Color.WHITE);
-        searchLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        searchLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
 
         searchField = new JTextField(16);
-        searchField.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        searchField.setFont(new Font("SansSerif", Font.PLAIN, 12));
         searchField.setPreferredSize(new Dimension(180, 30));
-        searchField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(BORDER_COLOR),
-                BorderFactory.createEmptyBorder(4, 8, 4, 8)
-        ));
 
         String[] categories = {
                 "All Categories", "Tutoring", "Design", "Research",
                 "Errand", "Technical", "Creative", "Labor", "Other"
         };
         categoryFilter = new JComboBox<>(categories);
-        categoryFilter.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        categoryFilter.setFont(new Font("SansSerif", Font.PLAIN, 12));
         categoryFilter.setPreferredSize(new Dimension(150, 30));
 
         JButton searchBtn = new JButton("Search");
         searchBtn.setBackground(GOLD);
         searchBtn.setForeground(MAROON);
-        searchBtn.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        searchBtn.setFont(new Font("SansSerif", Font.BOLD, 12));
         searchBtn.setFocusPainted(false);
         searchBtn.setBorderPainted(false);
         searchBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -85,7 +74,7 @@ public class BrowsePanel extends JPanel {
         JButton refreshBtn = new JButton("Refresh");
         refreshBtn.setBackground(Color.WHITE);
         refreshBtn.setForeground(MAROON);
-        refreshBtn.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        refreshBtn.setFont(new Font("SansSerif", Font.PLAIN, 12));
         refreshBtn.setFocusPainted(false);
         refreshBtn.setBorderPainted(false);
         refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -100,17 +89,22 @@ public class BrowsePanel extends JPanel {
         topBar.add(titleLabel, BorderLayout.WEST);
         topBar.add(searchRow,  BorderLayout.EAST);
 
-        // Sub bar: result count
+        // Sub bar
         JPanel subBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 6));
         subBar.setBackground(new Color(245, 240, 240));
         subBar.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, BORDER_COLOR));
 
         resultLabel = new JLabel("Loading listings...");
-        resultLabel.setFont(new Font("Segoe UI", Font.ITALIC, 12));
+        resultLabel.setFont(new Font("SansSerif", Font.ITALIC, 12));
         resultLabel.setForeground(Color.GRAY);
-        subBar.add(resultLabel);
 
-        // Scrollable listings area
+        JLabel hint = new JLabel("Click a card to expand details");
+        hint.setFont(new Font("SansSerif", Font.PLAIN, 11));
+        hint.setForeground(new Color(160, 120, 120));
+        subBar.add(resultLabel);
+        subBar.add(hint);
+
+        // Listings scroll area
         listingsPanel = new JPanel();
         listingsPanel.setLayout(new BoxLayout(listingsPanel, BoxLayout.Y_AXIS));
         listingsPanel.setBackground(LIGHT_BG);
@@ -126,43 +120,34 @@ public class BrowsePanel extends JPanel {
         northPanel.add(topBar, BorderLayout.NORTH);
         northPanel.add(subBar, BorderLayout.SOUTH);
 
-        add(northPanel, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
+        add(northPanel,  BorderLayout.NORTH);
+        add(scrollPane,  BorderLayout.CENTER);
 
-        // Button listeners
         searchBtn.addActionListener(e ->
                 loadListings(searchField.getText().trim(),
                         (String) categoryFilter.getSelectedItem()));
-
         refreshBtn.addActionListener(e -> {
             searchField.setText("");
             categoryFilter.setSelectedIndex(0);
             loadListings("", "All Categories");
         });
-
         searchField.addActionListener(e ->
                 loadListings(searchField.getText().trim(),
                         (String) categoryFilter.getSelectedItem()));
     }
 
-    // Load listings from DataStore, filter, and display as cards
-  
     private void loadListings(String keyword, String category) {
         listingsPanel.removeAll();
 
-        ArrayList<JobListing> jobs;
-        if (keyword.isEmpty()) {
-            jobs = DataStore.getOpenListings();
-        } else {
-            jobs = DataStore.searchListings(keyword);
-        }
+        ArrayList<JobListing> jobs = keyword.isEmpty()
+                ? DataStore.getOpenListings()
+                : DataStore.searchListings(keyword);
 
         ArrayList<JobListing> filtered = new ArrayList<>();
         for (JobListing job : jobs) {
             boolean matchesCategory = category.equals("All Categories")
                     || job.getCategory().equalsIgnoreCase(category);
-            boolean isOpen = job.getStatus().equals("OPEN");
-            if (matchesCategory && isOpen) {
+            if (matchesCategory && job.getStatus().equals("OPEN")) {
                 filtered.add(job);
             }
         }
@@ -171,14 +156,14 @@ public class BrowsePanel extends JPanel {
 
         if (filtered.isEmpty()) {
             JLabel none = new JLabel("No listings found. Try a different search.");
-            none.setFont(new Font("Segoe UI", Font.ITALIC, 13));
+            none.setFont(new Font("SansSerif", Font.ITALIC, 13));
             none.setForeground(Color.GRAY);
             none.setAlignmentX(Component.CENTER_ALIGNMENT);
             none.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
             listingsPanel.add(none);
         } else {
             for (JobListing job : filtered) {
-                listingsPanel.add(buildJobCard(job));
+                listingsPanel.add(new ExpandableCard(job));
                 listingsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
             }
         }
@@ -187,122 +172,270 @@ public class BrowsePanel extends JPanel {
         listingsPanel.repaint();
     }
 
-    // Build a card panel for a single JobListing object
-    // Encapsulation: we use getters to read private fields
-    // Polymorphism: job.getSummary() runs JobListing's @Override version
-  
-    private JPanel buildJobCard(JobListing job) {
-        JPanel card = new JPanel(new BorderLayout(10, 6));
-        card.setBackground(CARD_WHITE);
-        card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(BORDER_COLOR, 1),
-                BorderFactory.createEmptyBorder(14, 16, 14, 16)
-        ));
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 165));
-
-        // Top row: title + category badge
-        JPanel topRow = new JPanel(new BorderLayout());
-        topRow.setOpaque(false);
-
-        JLabel titleLabel = new JLabel(job.getTitle()); // Encapsulation
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        titleLabel.setForeground(MAROON);
-
-        JLabel categoryBadge = new JLabel("  " + job.getCategory() + "  ");
-        categoryBadge.setFont(new Font("Segoe UI", Font.BOLD, 10));
-        categoryBadge.setForeground(Color.WHITE);
-        categoryBadge.setBackground(MAROON);
-        categoryBadge.setOpaque(true);
-        categoryBadge.setBorder(BorderFactory.createEmptyBorder(3, 6, 3, 6));
-
-        topRow.add(titleLabel,    BorderLayout.WEST);
-        topRow.add(categoryBadge, BorderLayout.EAST);
-
-        // Description
-        String desc = job.getDescription(); // Encapsulation
-        if (desc.length() > 110) {
-            desc = desc.substring(0, 110) + "...";
-        }
-        JLabel descLabel = new JLabel("<html>" + desc + "</html>");
-        descLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        descLabel.setForeground(Color.DARK_GRAY);
-
-        // Bottom row: meta info + apply button
-        JPanel bottomRow = new JPanel(new BorderLayout(8, 0));
-        bottomRow.setOpaque(false);
-
-        String payText = job.getPayType().equals("PER_HOUR")
-                ? "P" + job.getPayRate() + "/hr"
-                : "P" + job.getPayRate() + " fixed";
-
-        JLabel metaLabel = new JLabel(
-                "  " + payText
-                        + "   " + job.getLocation()
-                        + "   " + job.getSlotsAvailable() + " slot(s)"
-                        + "   Deadline: " + job.getDeadline()
+    public void refresh() {
+        loadListings(
+                searchField.getText().trim(),
+                (String) categoryFilter.getSelectedItem()
         );
-        metaLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        metaLabel.setForeground(new Color(100, 100, 100));
-
-        JLabel posterLabel = new JLabel("Posted by: " + job.getPostedBy());
-        posterLabel.setFont(new Font("Segoe UI", Font.ITALIC, 11));
-        posterLabel.setForeground(Color.GRAY);
-
-        JPanel metaPanel = new JPanel(new GridLayout(2, 1, 0, 2));
-        metaPanel.setOpaque(false);
-        metaPanel.add(metaLabel);
-        metaPanel.add(posterLabel);
-
-        JButton applyBtn = new JButton("Apply");
-        applyBtn.setBackground(MAROON);
-        applyBtn.setForeground(GOLD);
-        applyBtn.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        applyBtn.setFocusPainted(false);
-        applyBtn.setBorderPainted(false);
-        applyBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        applyBtn.setPreferredSize(new Dimension(90, 36));
-
-        boolean alreadyApplied = DataStore.hasApplied(
-                currentUser.getEmail(), job.getListingId()
-        );
-        boolean isOwnListing = job.getPostedBy()
-                .equalsIgnoreCase(currentUser.getEmail());
-
-        if (alreadyApplied) {
-            applyBtn.setText("Applied");
-            applyBtn.setBackground(new Color(180, 180, 180));
-            applyBtn.setEnabled(false);
-        } else if (isOwnListing) {
-            applyBtn.setText("Your Post");
-            applyBtn.setBackground(new Color(180, 180, 180));
-            applyBtn.setEnabled(false);
-        }
-
-        applyBtn.addActionListener(e -> handleApply(job, applyBtn));
-
-        bottomRow.add(metaPanel, BorderLayout.CENTER);
-        bottomRow.add(applyBtn,  BorderLayout.EAST);
-
-        card.add(topRow,    BorderLayout.NORTH);
-        card.add(descLabel, BorderLayout.CENTER);
-        card.add(bottomRow, BorderLayout.SOUTH);
-
-        return card;
     }
 
-    // Handle the Apply button click
-  
+    // ── Expandable card component ─────────────────────────────────────────
+
+    private class ExpandableCard extends JPanel {
+
+        private boolean expanded = false;
+        private JPanel  collapsedView;
+        private JPanel  expandedView;
+        private JobListing job;
+
+        ExpandableCard(JobListing job) {
+            this.job = job;
+            setLayout(new BorderLayout());
+            setBackground(CARD_WHITE);
+            setMaximumSize(new Dimension(Integer.MAX_VALUE, 9999));
+            setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(BORDER_COLOR, 1),
+                    BorderFactory.createEmptyBorder(0, 0, 0, 0)
+            ));
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+            collapsedView = buildCollapsedView();
+            expandedView  = buildExpandedView();
+            expandedView.setVisible(false);
+
+            add(collapsedView, BorderLayout.NORTH);
+            add(expandedView,  BorderLayout.CENTER);
+
+            // Click anywhere on card to toggle
+            MouseAdapter toggle = new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    // Don't collapse if clicking a button
+                    if (e.getSource() instanceof JButton) return;
+                    toggleExpand();
+                }
+            };
+            addMouseListener(toggle);
+            addMouseListenerRecursively(this, toggle);
+        }
+
+        private void addMouseListenerRecursively(Container c, MouseAdapter ma) {
+            for (Component child : c.getComponents()) {
+                if (!(child instanceof JButton)) {
+                    child.addMouseListener(ma);
+                }
+                if (child instanceof Container) {
+                    addMouseListenerRecursively((Container) child, ma);
+                }
+            }
+        }
+
+        private void toggleExpand() {
+            expanded = !expanded;
+            expandedView.setVisible(expanded);
+
+            setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(expanded ? BORDER_ACTIVE : BORDER_COLOR, expanded ? 2 : 1),
+                    BorderFactory.createEmptyBorder(0, 0, 0, 0)
+            ));
+            setBackground(expanded ? CARD_EXPANDED : CARD_WHITE);
+            collapsedView.setBackground(expanded ? CARD_EXPANDED : CARD_WHITE);
+
+            revalidate();
+            repaint();
+
+            // Scroll to show the expanded card
+            SwingUtilities.invokeLater(() -> scrollRectToVisible(getBounds()));
+        }
+
+        // ── Collapsed view (always visible) ──────────────────────
+
+        private JPanel buildCollapsedView() {
+            JPanel panel = new JPanel(new BorderLayout(10, 4));
+            panel.setBackground(CARD_WHITE);
+            panel.setBorder(BorderFactory.createEmptyBorder(12, 16, 12, 16));
+
+            // Title + category badge
+            JPanel topRow = new JPanel(new BorderLayout());
+            topRow.setOpaque(false);
+
+            JLabel titleLabel = new JLabel(job.getTitle());
+            titleLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
+            titleLabel.setForeground(MAROON);
+
+            JPanel rightBadges = new JPanel(new FlowLayout(FlowLayout.RIGHT, 6, 0));
+            rightBadges.setOpaque(false);
+
+            JLabel categoryBadge = badge(job.getCategory(), MAROON, Color.WHITE);
+            JLabel chevron = new JLabel("▾");
+            chevron.setFont(new Font("SansSerif", Font.BOLD, 14));
+            chevron.setForeground(new Color(160, 100, 100));
+
+            rightBadges.add(categoryBadge);
+            rightBadges.add(chevron);
+
+            topRow.add(titleLabel,   BorderLayout.WEST);
+            topRow.add(rightBadges,  BorderLayout.EAST);
+
+            // Short description preview
+            String desc = job.getDescription();
+            if (desc.length() > 110) desc = desc.substring(0, 110) + "...";
+            JLabel descPreview = new JLabel("<html>" + desc + "</html>");
+            descPreview.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            descPreview.setForeground(Color.DARK_GRAY);
+
+            // Meta row
+            String payText = job.getPayType().equals("PER_HOUR")
+                    ? "₱" + job.getPayRate() + "/hr"
+                    : "₱" + job.getPayRate() + " fixed";
+
+            JLabel metaLabel = new JLabel(
+                    payText + "   |   " + job.getLocation()
+                            + "   |   " + job.getSlotsAvailable() + " slot(s)"
+                            + "   |   Deadline: " + job.getDeadline()
+            );
+            metaLabel.setFont(new Font("SansSerif", Font.PLAIN, 11));
+            metaLabel.setForeground(new Color(120, 100, 100));
+
+            panel.add(topRow,    BorderLayout.NORTH);
+            panel.add(descPreview, BorderLayout.CENTER);
+            panel.add(metaLabel, BorderLayout.SOUTH);
+
+            return panel;
+        }
+
+        // ── Expanded view (shown on click) ────────────────────────
+
+        private JPanel buildExpandedView() {
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            panel.setBackground(CARD_EXPANDED);
+            panel.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(220, 200, 200)),
+                    BorderFactory.createEmptyBorder(14, 16, 16, 16)
+            ));
+
+            // Section: Full Description
+            panel.add(sectionLabel("Description"));
+            panel.add(Box.createRigidArea(new Dimension(0, 4)));
+
+            JTextArea descArea = new JTextArea(job.getDescription());
+            descArea.setFont(new Font("SansSerif", Font.PLAIN, 13));
+            descArea.setForeground(Color.DARK_GRAY);
+            descArea.setBackground(CARD_EXPANDED);
+            descArea.setEditable(false);
+            descArea.setLineWrap(true);
+            descArea.setWrapStyleWord(true);
+            descArea.setFocusable(false);
+            descArea.setAlignmentX(Component.LEFT_ALIGNMENT);
+            descArea.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+            panel.add(descArea);
+            panel.add(Box.createRigidArea(new Dimension(0, 14)));
+
+            // Section: Details grid
+            panel.add(sectionLabel("Details"));
+            panel.add(Box.createRigidArea(new Dimension(0, 6)));
+
+            JPanel detailsGrid = new JPanel(new GridLayout(0, 2, 10, 6));
+            detailsGrid.setBackground(CARD_EXPANDED);
+            detailsGrid.setAlignmentX(Component.LEFT_ALIGNMENT);
+            detailsGrid.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
+
+            String payText = job.getPayType().equals("PER_HOUR")
+                    ? "₱" + job.getPayRate() + " / hour"
+                    : "₱" + job.getPayRate() + " (fixed rate)";
+
+            addDetailRow(detailsGrid, "💰 Pay",        payText);
+            addDetailRow(detailsGrid, "📍 Location",   job.getLocation());
+            addDetailRow(detailsGrid, "🏷 Category",   job.getCategory());
+            addDetailRow(detailsGrid, "👥 Slots",      job.getSlotsAvailable() + " available");
+            addDetailRow(detailsGrid, "📅 Deadline",   job.getDeadline());
+            addDetailRow(detailsGrid, "📬 Posted by",  job.getPostedBy());
+            addDetailRow(detailsGrid, "🗓 Date posted", job.getDatePosted());
+            addDetailRow(detailsGrid, "🆔 Listing ID", job.getListingId());
+
+            panel.add(detailsGrid);
+            panel.add(Box.createRigidArea(new Dimension(0, 16)));
+
+            // Apply button (only for non-owners)
+            boolean alreadyApplied = DataStore.hasApplied(currentUser.getEmail(), job.getListingId());
+            boolean isOwn = job.getPostedBy().equalsIgnoreCase(currentUser.getEmail());
+
+            JPanel btnRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+            btnRow.setOpaque(false);
+            btnRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            JButton applyBtn = new JButton();
+            applyBtn.setFont(new Font("SansSerif", Font.BOLD, 13));
+            applyBtn.setFocusPainted(false);
+            applyBtn.setBorderPainted(false);
+            applyBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            applyBtn.setPreferredSize(new Dimension(140, 38));
+
+            if (isOwn) {
+                applyBtn.setText("Your Listing");
+                applyBtn.setBackground(new Color(180, 180, 180));
+                applyBtn.setForeground(Color.WHITE);
+                applyBtn.setEnabled(false);
+            } else if (alreadyApplied) {
+                applyBtn.setText("✓ Applied");
+                applyBtn.setBackground(new Color(180, 180, 180));
+                applyBtn.setForeground(Color.WHITE);
+                applyBtn.setEnabled(false);
+            } else {
+                applyBtn.setText("Apply Now");
+                applyBtn.setBackground(MAROON);
+                applyBtn.setForeground(GOLD);
+                applyBtn.addActionListener(e -> handleApply(job, applyBtn));
+            }
+
+            btnRow.add(applyBtn);
+            panel.add(btnRow);
+
+            return panel;
+        }
+
+        private JLabel sectionLabel(String text) {
+            JLabel lbl = new JLabel(text.toUpperCase());
+            lbl.setFont(new Font("SansSerif", Font.BOLD, 10));
+            lbl.setForeground(new Color(160, 100, 100));
+            lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
+            return lbl;
+        }
+
+        private void addDetailRow(JPanel grid, String label, String value) {
+            JLabel lbl = new JLabel(label);
+            lbl.setFont(new Font("SansSerif", Font.BOLD, 12));
+            lbl.setForeground(new Color(80, 50, 50));
+
+            JLabel val = new JLabel(value);
+            val.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            val.setForeground(Color.DARK_GRAY);
+
+            grid.add(lbl);
+            grid.add(val);
+        }
+
+        private JLabel badge(String text, Color bg, Color fg) {
+            JLabel lbl = new JLabel("  " + text + "  ");
+            lbl.setFont(new Font("SansSerif", Font.BOLD, 10));
+            lbl.setForeground(fg);
+            lbl.setBackground(bg);
+            lbl.setOpaque(true);
+            lbl.setBorder(BorderFactory.createEmptyBorder(3, 4, 3, 4));
+            return lbl;
+        }
+    }
+
+    // ── Apply handler ─────────────────────────────────────────────────────
+
     private void handleApply(JobListing job, JButton applyBtn) {
         JTextArea messageArea = new JTextArea(4, 30);
         messageArea.setLineWrap(true);
         messageArea.setWrapStyleWord(true);
-        messageArea.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        messageArea.setFont(new Font("SansSerif", Font.PLAIN, 12));
 
         JPanel dialogPanel = new JPanel(new BorderLayout(0, 8));
-        dialogPanel.add(
-                new JLabel("Write a short message to the poster:"),
-                BorderLayout.NORTH
-        );
+        dialogPanel.add(new JLabel("Write a short message to the poster:"), BorderLayout.NORTH);
         dialogPanel.add(new JScrollPane(messageArea), BorderLayout.CENTER);
 
         int result = JOptionPane.showConfirmDialog(
@@ -329,21 +462,12 @@ public class BrowsePanel extends JPanel {
                     "Successfully applied to \"" + job.getTitle() + "\"!\n"
                             + "The poster will review your application.",
                     "Application Sent!", JOptionPane.INFORMATION_MESSAGE);
-            applyBtn.setText("Applied");
+            applyBtn.setText("✓ Applied");
             applyBtn.setBackground(new Color(180, 180, 180));
             applyBtn.setEnabled(false);
         } else {
             JOptionPane.showMessageDialog(this,
                     error, "Could Not Apply", JOptionPane.WARNING_MESSAGE);
         }
-    }
-
-    // Called by MainFrame when switching back to this tab
-  
-    public void refresh() {
-        loadListings(
-                searchField.getText().trim(),
-                (String) categoryFilter.getSelectedItem()
-        );
     }
 }
