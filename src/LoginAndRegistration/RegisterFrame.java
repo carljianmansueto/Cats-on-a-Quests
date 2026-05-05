@@ -29,16 +29,7 @@ public class RegisterFrame extends JFrame implements ActionListener {
     private static final Color GOLD        = new Color(255, 215, 0);
 
     private static final String[] ROLES = {"Student", "Faculty", "Staff"};
-    private static final String[] COLLEGES = {
-            "College of Engineering and Technology",
-            "College of Science and Mathematics",
-            "College of Computer Studies",
-            "College of Education",
-            "College of Arts and Science",
-            "College of Business Administration & Accountancy",
-            "College of Nursing",
-            "Other"
-    };
+    private static final String[] COLLEGES = { "College of Engineering and Technology", "College of Science and Mathematics", "College of Computer Studies", "College of Education", "College of Arts and Science", "College of Business Administration & Accountancy", "College of Nursing", "Other"};
 
     public RegisterFrame() {
         setTitle("Cats on a Quest - Register");
@@ -252,7 +243,7 @@ public class RegisterFrame extends JFrame implements ActionListener {
         String password = new String(passwordField.getPassword());
         String confirm  = new String(confirmField.getPassword());
 
-        //Validator part, checks whether user input a correct info
+        //Validator part, checks whether user inputs a correct info
         if (fullName.isEmpty())    { showMessage("Please enter your full name"); return; }
         if (email.isEmpty())       { showMessage("Please enter your email"); return; }
         if (!email.endsWith("@g.msuiit.edu.ph")) { showMessage("Email must be @g.msuiit.edu.ph"); return;}
