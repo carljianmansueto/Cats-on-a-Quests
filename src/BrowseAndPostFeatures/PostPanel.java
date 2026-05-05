@@ -33,11 +33,9 @@ public class PostPanel extends JPanel {
     private JTextField        deadlineField;
     private JLabel            messageLabel;
 
-    // Auto-incrementing listing ID counter
-    private static int listingCounter = 1;
 
     // Constructor
-  
+
     public PostPanel(User user) {
         this.currentUser = user;
         setLayout(new BorderLayout());
@@ -46,7 +44,7 @@ public class PostPanel extends JPanel {
     }
 
     // Build the full panel layout
-  
+
     private void buildUI() {
 
         // Top bar
@@ -200,7 +198,7 @@ public class PostPanel extends JPanel {
     }
 
     // Validate form input and create a new JobListing object
-  
+
     private void handlePost() {
         String title    = titleField.getText().trim();
         String desc     = descArea.getText().trim();
@@ -254,7 +252,7 @@ public class PostPanel extends JPanel {
         }
 
         // Generate unique listing ID
-        String listingId = String.format("LST-%03d", listingCounter++);
+        String listingId = DataStore.generateListingId(); // FIX: always use DataStore counter
         String today = LocalDate.now().toString();
 
         // Create a new JobListing object — Object Creation + Constructor
@@ -289,7 +287,7 @@ public class PostPanel extends JPanel {
     }
 
     // Reset all fields
-  
+
     private void clearForm() {
         titleField.setText("");
         descArea.setText("");
@@ -312,7 +310,7 @@ public class PostPanel extends JPanel {
     }
 
     // Helper methods for building the form
-  
+
     private void addFormRow(JPanel panel, String labelText, JComponent field) {
         JLabel label = new JLabel(labelText);
         label.setFont(new Font("Segoe UI", Font.BOLD, 12));

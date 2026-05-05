@@ -362,7 +362,7 @@ public class DataStore {
 
     private static void loadListings() {
         listings.clear();
-        listingCounter = 1;
+        listingCounter = 1; // reset, then we find the true highest ID below
         File f = new File(LISTINGS_FILE);
         if (!f.exists()) return;
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
@@ -372,7 +372,19 @@ public class DataStore {
                     JobListing jl = JobListing.fromFileString(line);
                     if (jl != null) {
                         listings.add(jl);
-                        listingCounter++;
+                        // FIX: Parse the NUMBER from the saved ID (e.g. "LST-004" -> 4)
+                        // and keep track of the HIGHEST number seen.
+                        // After loading, listingCounter = highest + 1,
+                        // so the next new listing always gets a fresh unused ID.
+                        try {
+                            String numPart = jl.getListingId().replace("LST-", "");
+                            int num = Integer.parseInt(numPart);
+                            if (num >= listingCounter) {
+                                listingCounter = num + 1;
+                            }
+                        } catch (NumberFormatException ignored) {
+                            listingCounter++;
+                        }
                     }
                 }
             }
@@ -394,7 +406,7 @@ public class DataStore {
 
     private static void loadApplications() {
         applications.clear();
-        appCounter = 1;
+        appCounter = 1; // reset, then find true highest ID below
         File f = new File(APPS_FILE);
         if (!f.exists()) return;
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
@@ -404,7 +416,17 @@ public class DataStore {
                     Application a = Application.fromFileString(line);
                     if (a != null) {
                         applications.add(a);
-                        appCounter++;
+                        // FIX: Parse the NUMBER from the saved ID (e.g. "APP-007" -> 7)
+                        // and keep track of the HIGHEST number seen.
+                        try {
+                            String numPart = a.getApplicationId().replace("APP-", "");
+                            int num = Integer.parseInt(numPart);
+                            if (num >= appCounter) {
+                                appCounter = num + 1;
+                            }
+                        } catch (NumberFormatException ignored) {
+                            appCounter++;
+                        }
                     }
                 }
             }

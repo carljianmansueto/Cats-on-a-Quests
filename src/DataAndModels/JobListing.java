@@ -48,6 +48,7 @@ public class JobListing extends Listing {
     // --- Setters ---
     public void setSlotsAvailable(int slots) { this.slotsAvailable = slots; }
     public void setPayRate(double rate)      { this.payRate = rate; }
+    public void setDeadline(String deadline) { this.deadline = deadline; } // added for Edit dialog
 
     /**
      * @Override — replaces the parent class's getSummary() with a better version.
