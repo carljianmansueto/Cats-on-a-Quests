@@ -1,0 +1,6 @@
+JOB|LST-001|Math Tutor Needed|Looking for a 2nd year or higher student who can tutor Calculus 1. Sessions are twice a week, 1 hour each. Must be patient and good at explaining concepts.|juan.delacruz@g.msuiit.edu.ph|2026-05-04|OPEN|Tutoring|75.0|PER_HOUR|Library Study Rooms|2|2026-05-18
+JOB|LST-002|Graphic Designer for Org Tarpaulin|We need someone to design a tarpaulin for our upcoming seminar. Must know Canva or Photoshop. Deliver in 3 days from acceptance.|csso@g.msuiit.edu.ph|2026-05-04|OPEN|Design|500.0|FIXED|Online / Remote|1|2026-05-18
+JOB|LST-003|Research Assistant (Data Encoding)|Faculty research project needs help encoding survey responses into Excel. Approximately 200 entries. Work from home, submit by deadline.|ana.reyes@msuiit.edu.ph|2026-05-04|OPEN|Research|800.0|FIXED|Remote|1|2026-05-18
+JOB|LST-004|Campus Errand Runner|Need someone to photocopy and submit documents to the Registrar and OVCAA. Quick task, can be done within 2 hours.|maria.santos@g.msuiit.edu.ph|2026-05-04|OPEN|Errand|150.0|FIXED|Admin Building Area|1|2026-05-18
+JOB|LST-001|hahaa|ajaha|toniyavari.honcada@g.msuiit.edu.ph|2026-05-04|OPEN|Tutoring|1.0E10|PER_HOUR|ccs|1|2026-05-18
+JOB|LST-001|cat|bahugi akong iring|carlosgwapos@g.msuiit.edu.ph|2026-05-04|OPEN|Errand|1.0E8|FIXED|msuiit|1|2026-05-18

@@ -1,0 +1,2 @@
+APP-001|LST-001|toniyavari.honcada@g.msuiit.edu.ph|2026-05-04|hello|PENDING
+APP-002|LST-001|carlosgwapos@g.msuiit.edu.ph|2026-05-04|apply ko be|PENDING
