@@ -373,7 +373,7 @@ public class DataStore {
     }
 
     // --- Applications ---
-    private static void saveApplications() {
+    public static void saveApplications() {
         try (PrintWriter pw = new PrintWriter(new FileWriter(APPS_FILE))) {
             for (Application a : applications) {
                 pw.println(a.toFileString());

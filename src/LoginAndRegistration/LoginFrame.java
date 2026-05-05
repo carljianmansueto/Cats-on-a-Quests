@@ -2,6 +2,7 @@ package LoginAndRegistration;
 
 import DataAndModels.User;
 import DataAndModels.DataStore;
+import DashboardAndApplicationManagement.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +27,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         setTitle("Cats on a Quest - Login");    // Set the window title shown on top of the frame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   // Makes sure the application fully closes when this window is closed
         setSize(400, 500);          // Fixed window size so layout stays consistent
-        setLocationRelativeTo(null);            // Centers the window on the screen when opened
+        setLocationRelativeTo(null);            // Automatically centers the window on the screen when opened
         initUI();         // Calls the method that builds and arranges all UI components
     }
 
@@ -36,7 +37,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(LIGHT_BG);
 
-        // This is the top part with the app name and subtitle
+        // This is the top part with the app name and subtitle along with the maroon background
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
         headerPanel.setBackground(MAROON);
@@ -141,7 +142,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
-        // Footer
+        // Footer part showing "CCC102 - Cats on a Quest"
         JPanel footerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         footerPanel.setBackground(LIGHT_BG);
         JLabel footerLabel = new JLabel("CCC102 - Cats on a Quest");
@@ -182,7 +183,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         String email = emailField.getText().trim();
         String password = new String(passwordField.getPassword());
 
-        // Validator part
+        // Validator part, checks if field is not empty
         if (email.isEmpty()) {
             messageLabel.setText("Please enter your email");
             messageLabel.setForeground(Color.RED);
@@ -208,22 +209,10 @@ public class LoginFrame extends JFrame implements ActionListener {
 
             // Closes the login screen and proceed to main screen
             dispose();
-            new DashboardAndApplicationManagement.MainFrame(
-                    user.getFullName(),
-                    user.getRole(),
-                    user.getEmail(),
-                    user.getCollege(),
-                    user.getCourse(),
-                    user.getIdNumber()
-            ).setVisible(true);
+            new MainFrame(user.getFullName(), user.getRole(), user.getEmail(), user.getCollege(), user.getCourse(), user.getIdNumber()).setVisible(true);
         } else {
             messageLabel.setText("Invalid email or password");
             messageLabel.setForeground(Color.RED);
         }
-
-        // Clear the message after 3 seconds so it does not stay on screen
-        Timer timer = new Timer(3000, e -> messageLabel.setText(" "));
-        timer.setRepeats(false);
-        timer.start();
     }
 }
