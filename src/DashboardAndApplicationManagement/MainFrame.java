@@ -151,4 +151,22 @@ public class MainFrame extends JFrame {
         g2d.dispose();
         return icon;
     }
+
+    /**
+     * Called by MyListingPanel's "Create New Listing" button.
+     * Switches to the "Post a Job or Service" tab (index 1).
+     * Tab order: 0=Browse, 1=Post a Job, 2=My Listings, 3=My Applications
+     */
+    public void goToPostTab() {
+        tabbedPane.setSelectedIndex(1);
+    }
+
+    /**
+     * Called by MyApplicationPanel's "Browse More Jobs" button.
+     * Switches to the "Browse Jobs & Services" tab (index 0).
+     */
+    public void goToBrowseTab() {
+        tabbedPane.setSelectedIndex(0);
+    }
+
 }

@@ -1,5 +1,5 @@
 package DataAndModels;
-
+//User data
 public class User {
 
     private String fullName;
@@ -23,36 +23,64 @@ public class User {
     }
 
     // Getters
-    public String getFullName() { return fullName; }
-    public String getPassword() { return password; }
-    public String getEmail()    { return email; }
-    public String getRole()     { return role; }
-    public String getCollege()  { return college; }
-    public String getCourse()   { return course; }
-    public String getIdNumber() { return idNumber; }
+    public String getFullName() {
+        return fullName;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public String getEmail()    {
+        return email;
+    }
+    public String getRole()  {
+        return role;
+    }
+    public String getCollege() {
+        return college;
+    }
+    public String getCourse() {
+        return course;
+    }
+    public String getIdNumber() {
+        return idNumber;
+    }
 
     // Setters
-    public void setFullName(String fullName) { this.fullName = fullName; }
-    public void setPassword(String password) { this.password = password; }
-    public void setEmail(String email)       { this.email = email; }
-    public void setRole(String role)         { this.role = role; }
-    public void setCollege(String college)   { this.college = college; }
-    public void setCourse(String course)     { this.course = course; }
-    public void setIdNumber(String idNumber) { this.idNumber = idNumber; }
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public void setRole(String role) {
+        this.role = role;
+    }
+    public void setCollege(String college) {
+        this.college = college;
+    }
+    public void setCourse(String course) {
+        this.course = course;
+    }
+    public void setIdNumber(String idNumber) {
+        this.idNumber = idNumber;
+    }
 
-    /**
-     * Converts User to file string format
-     * Format: fullName|password|email|role|college|course|idNumber
-     */
+
+     //Method that converts User to file string format (reference for the order of the registerframe of the system)
+     //Format: fullName|password|email|role|college|course|idNumber
+
     public String toFileString() {
         return fullName + "|" + password + "|" + email + "|" + role + "|"
                 + college + "|" + course + "|" + idNumber;
     }
 
-    /**
-     * Rebuilds User from file line
-     * FIXED: Split by | not \n
-     */
+
+     //Rebuilds User from file line
+     //FIXED: Split by | not \n
+
     public static User fromFileString(String line) {
         String[] parts = line.split("\\|");  // ← FIXED: pipe separator, not newline
         if (parts.length < 7) return null;

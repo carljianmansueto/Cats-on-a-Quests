@@ -251,8 +251,8 @@ public class PostPanel extends JPanel {
             return;
         }
 
-        // Generate unique listing ID — uses DataStore so IDs never collide
-        String listingId = DataStore.generateListingId();
+        // Generate unique listing ID
+        String listingId = DataStore.generateListingId(); // FIX: always use DataStore counter
         String today = LocalDate.now().toString();
 
         // Create a new JobListing object — Object Creation + Constructor

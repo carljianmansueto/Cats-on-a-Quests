@@ -4,6 +4,17 @@ import java.util.ArrayList;
 import java.io.*;
 import java.time.LocalDate;
 
+/**
+ * DataStore.java
+ * Member 1 - Data & Models
+ *
+ * DataStore is the central data manager for the entire application.
+ * It stores all users, listings, and applications in memory using ArrayLists,
+ * and also saves/loads them from text files so data persists between runs.
+ *
+ * UPDATED: Removed username, using email as unique identifier.
+ * UPDATED: Added 'course' field to User.
+ */
 public class DataStore {
 
     // -----------------------------------------------------------------------
@@ -179,6 +190,7 @@ public class DataStore {
      */
     public static void addListing(JobListing jl) {
         listings.add(jl);
+        listingCounter++;
         saveListings();
     }
 
@@ -212,7 +224,7 @@ public class DataStore {
      * Generates the next unique listing ID like "LST-007".
      */
     public static String generateListingId() {
-        return String.format("LST-%03d", listingCounter++);
+        return String.format("LST-%03d", listingCounter);
     }
 
     // -----------------------------------------------------------------------
@@ -350,7 +362,7 @@ public class DataStore {
 
     private static void loadListings() {
         listings.clear();
-        listingCounter = 1;
+        listingCounter = 1; // reset, then we find the true highest ID below
         File f = new File(LISTINGS_FILE);
         if (!f.exists()) return;
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
@@ -360,10 +372,19 @@ public class DataStore {
                     JobListing jl = JobListing.fromFileString(line);
                     if (jl != null) {
                         listings.add(jl);
+                        // FIX: Parse the NUMBER from the saved ID (e.g. "LST-004" -> 4)
+                        // and keep track of the HIGHEST number seen.
+                        // After loading, listingCounter = highest + 1,
+                        // so the next new listing always gets a fresh unused ID.
                         try {
-                            int num = Integer.parseInt(jl.getListingId().replace("LST-", ""));
-                            if (num >= listingCounter) listingCounter = num + 1;
-                        } catch (NumberFormatException ignored) {}
+                            String numPart = jl.getListingId().replace("LST-", "");
+                            int num = Integer.parseInt(numPart);
+                            if (num >= listingCounter) {
+                                listingCounter = num + 1;
+                            }
+                        } catch (NumberFormatException ignored) {
+                            listingCounter++;
+                        }
                     }
                 }
             }
@@ -385,7 +406,7 @@ public class DataStore {
 
     private static void loadApplications() {
         applications.clear();
-        appCounter = 1;
+        appCounter = 1; // reset, then find true highest ID below
         File f = new File(APPS_FILE);
         if (!f.exists()) return;
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
@@ -395,10 +416,17 @@ public class DataStore {
                     Application a = Application.fromFileString(line);
                     if (a != null) {
                         applications.add(a);
+                        // FIX: Parse the NUMBER from the saved ID (e.g. "APP-007" -> 7)
+                        // and keep track of the HIGHEST number seen.
                         try {
-                            int num = Integer.parseInt(a.getApplicationId().replace("APP-", ""));
-                            if (num >= appCounter) appCounter = num + 1;
-                        } catch (NumberFormatException ignored) {}
+                            String numPart = a.getApplicationId().replace("APP-", "");
+                            int num = Integer.parseInt(numPart);
+                            if (num >= appCounter) {
+                                appCounter = num + 1;
+                            }
+                        } catch (NumberFormatException ignored) {
+                            appCounter++;
+                        }
                     }
                 }
             }
@@ -441,6 +469,7 @@ public class DataStore {
                 "juan.delacruz@g.msuiit.edu.ph", today, "Tutoring",
                 75.0, "PER_HOUR", "Library Study Rooms", 2, deadline
         ));
+        listingCounter++;
 
         listings.add(new JobListing(
                 generateListingId(), "Graphic Designer for Org Tarpaulin",
@@ -449,6 +478,7 @@ public class DataStore {
                 "csso@g.msuiit.edu.ph", today, "Design",
                 500.0, "FIXED", "Online / Remote", 1, deadline
         ));
+        listingCounter++;
 
         listings.add(new JobListing(
                 generateListingId(), "Research Assistant (Data Encoding)",
@@ -457,6 +487,7 @@ public class DataStore {
                 "ana.reyes@msuiit.edu.ph", today, "Research",
                 800.0, "FIXED", "Remote", 1, deadline
         ));
+        listingCounter++;
 
         listings.add(new JobListing(
                 generateListingId(), "Campus Errand Runner",
@@ -465,6 +496,7 @@ public class DataStore {
                 "maria.santos@g.msuiit.edu.ph", today, "Errand",
                 150.0, "FIXED", "Admin Building Area", 1, deadline
         ));
+        listingCounter++;
 
         saveListings();
     }
