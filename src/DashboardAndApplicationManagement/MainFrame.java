@@ -1,53 +1,38 @@
 package DashboardAndApplicationManagement;
 
-// ── ALL REQUIRED IMPORTS ──────────────────────────────────────────────────────
-// These were MISSING from the original MainFrame.java — that's why
-// the class couldn't be found as DashboardAndApplicationManagement.MainFrame
-import DataAndModels.DataStore;
-import DataAndModels.User;
 import BrowseAndPostFeatures.BrowsePanel;
 import BrowseAndPostFeatures.PostPanel;
-import LoginAndRegistration.LoginFrame;
+import DataAndModels.DataStore;
+import DataAndModels.User;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.image.BufferedImage;
 
 public class MainFrame extends JFrame {
 
+    // Colors
     private static final Color MAROON = new Color(128, 0, 0);
-    private static final Color MAROON_DARK = new Color(90, 0, 0);
     private static final Color LIGHT_BG = new Color(248, 245, 245);
-    private static final Color WHITE = Color.WHITE;
     private static final Color GOLD = new Color(255, 215, 0);
-    private static final Color BORDER_COLOR = new Color(200, 180, 180);
 
-    // User info — passed in from LoginFrame as 6 individual Strings
-    private final String fullName;
-    private final String role;
-    private final String email;
-    private final String college;
-    private final String course;
-    private final String idNumber;
+    // User info passed from LoginFrame
+    private String fullName;
+    private String role;
+    private String email;
+    private String college;
+    private String course;
+    private String idNumber;
 
-    private JPanel contentArea;
-    private CardLayout cardLayout;
+    // Panels
+    private BrowsePanel browsePanel;
+    private PostPanel postPanel;
+    private MyListingPanel myListingPanel;
+    private MyApplicationPanel myApplicationPanel;
 
-    // CardLayout panel name constants
-    public static final String PANEL_BROWSE = "BROWSE";
-    public static final String PANEL_POST = "POST";
-    public static final String PANEL_MYLIST = "MY_LISTINGS";
-    public static final String PANEL_MYAPPS = "MY_APPLICATIONS";
+    // Tabbed pane
+    private JTabbedPane tabbedPane;
 
-    // Sidebar nav buttons
-    private JButton btnBrowse, btnPost, btnMyListings, btnMyApps;
-
-    /**
-     * Called by LoginFrame after successful login:
-     * new MainFrame(user.getFullName(), user.getRole(), user.getEmail(),
-     * user.getCollege(), user.getCourse(), user.getIdNumber())
-     * .setVisible(true);
-     */
     public MainFrame(String fullName, String role, String email,
                      String college, String course, String idNumber) {
         this.fullName = fullName;
@@ -59,261 +44,111 @@ public class MainFrame extends JFrame {
 
         setTitle("Cats on a Quest - Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1100, 680);
+        setSize(1200, 800);
         setLocationRelativeTo(null);
-        setMinimumSize(new Dimension(900, 550));
+        setIconImage(createDummyIcon());
 
-        buildUI();
-        showPanel(PANEL_BROWSE); // default tab is Browse
+        initUI();
     }
 
-    private void buildUI() {
-        setLayout(new BorderLayout());
-        add(buildHeader(), BorderLayout.NORTH);
-        add(buildSidebar(), BorderLayout.WEST);
+    private void initUI() {
+        // Get the current user from DataStore
+        User currentUser = DataStore.findUserByEmail(email);
+        if (currentUser == null) {
+            currentUser = new User(fullName, "", email, role, college, course, idNumber);
+        }
 
-        cardLayout = new CardLayout();
-        contentArea = new JPanel(cardLayout);
-        contentArea.setBackground(LIGHT_BG);
+        // Main panel with BorderLayout
+        JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // Get the User object from DataStore using the email
-        // so BrowsePanel and PostPanel receive a proper User object
-        User userObj = DataStore.findUserByEmail(email);
+        // Top header bar
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(MAROON);
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(12, 20, 12, 20));
 
-        contentArea.add(new BrowsePanel(userObj), PANEL_BROWSE);
-        contentArea.add(new PostPanel(userObj), PANEL_POST);
-        contentArea.add(new MyListingPanel(email), PANEL_MYLIST);
-        contentArea.add(new MyApplicationPanel(email), PANEL_MYAPPS);
+        JLabel titleLabel = new JLabel("Welcome, " + fullName);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        titleLabel.setForeground(GOLD);
 
-        add(contentArea, BorderLayout.CENTER);
-    }
-
-    private JPanel buildHeader() {
-        JPanel header = new JPanel(new BorderLayout());
-        header.setBackground(MAROON);
-        header.setBorder(BorderFactory.createEmptyBorder(12, 20, 12, 20));
-
-        JPanel left = new JPanel();
-        left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
-        left.setOpaque(false);
-
-        JLabel appName = new JLabel("Cats on a Quest!");
-        appName.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        appName.setForeground(GOLD);
-
-        JLabel appSub = new JLabel("MSU-IIT Job & Service Finder");
-        appSub.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        appSub.setForeground(new Color(255, 220, 220));
-
-        left.add(appName);
-        left.add(appSub);
-        header.add(left, BorderLayout.WEST);
-
-        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
-        right.setOpaque(false);
-
-        JPanel userInfo = new JPanel();
-        userInfo.setLayout(new BoxLayout(userInfo, BoxLayout.Y_AXIS));
-        userInfo.setOpaque(false);
-
-        JLabel nameLabel = new JLabel(fullName);
-        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        nameLabel.setForeground(WHITE);
-        nameLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-
-        JLabel roleLabel = new JLabel(role + "  |  " + email);
-        roleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        roleLabel.setForeground(new Color(255, 220, 220));
-        roleLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-
-        userInfo.add(nameLabel);
-        userInfo.add(roleLabel);
+        JLabel userInfoLabel = new JLabel(role + " | " + email);
+        userInfoLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        userInfoLabel.setForeground(new Color(220, 200, 200));
 
         JButton logoutBtn = new JButton("Logout");
-        logoutBtn.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        logoutBtn.setBackground(MAROON_DARK);
-        logoutBtn.setForeground(GOLD);
+        logoutBtn.setBackground(Color.WHITE);
+        logoutBtn.setForeground(MAROON);
+        logoutBtn.setFont(new Font("Segoe UI", Font.BOLD, 11));
         logoutBtn.setFocusPainted(false);
-        logoutBtn.setBorder(BorderFactory.createLineBorder(GOLD, 1));
         logoutBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        logoutBtn.setPreferredSize(new Dimension(90, 34));
         logoutBtn.addActionListener(e -> handleLogout());
 
-        right.add(userInfo);
-        right.add(logoutBtn);
-        header.add(right, BorderLayout.EAST);
+        JPanel leftHeader = new JPanel();
+        leftHeader.setLayout(new BoxLayout(leftHeader, BoxLayout.Y_AXIS));
+        leftHeader.setOpaque(false);
+        leftHeader.add(titleLabel);
+        leftHeader.add(userInfoLabel);
 
-        return header;
+        headerPanel.add(leftHeader, BorderLayout.WEST);
+        headerPanel.add(logoutBtn, BorderLayout.EAST);
+
+        // Tabbed pane for different sections
+        tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+        tabbedPane.setTabPlacement(JTabbedPane.TOP);
+        tabbedPane.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+
+        // Initialize all panels
+        browsePanel = new BrowsePanel(currentUser);
+        postPanel = new PostPanel(currentUser);
+        myListingPanel = new MyListingPanel(currentUser);
+        myApplicationPanel = new MyApplicationPanel(currentUser);
+
+        // Add tabs
+        tabbedPane.addTab("Browse Jobs & Services", browsePanel);
+        tabbedPane.addTab("Post a Job or Service", postPanel);
+        tabbedPane.addTab("My Listings", myListingPanel);
+        tabbedPane.addTab("My Applications", myApplicationPanel);
+
+        // Set tab colors and styling
+        styleTabPane();
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+        mainPanel.add(tabbedPane, BorderLayout.CENTER);
+
+        add(mainPanel);
     }
 
-    private JPanel buildSidebar() {
-        JPanel sidebar = new JPanel();
-        sidebar.setBackground(MAROON_DARK);
-        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-        sidebar.setPreferredSize(new Dimension(200, 0));
-        sidebar.setBorder(BorderFactory.createEmptyBorder(16, 0, 16, 0));
+    private void styleTabPane() {
+        // Style tabs
+        UIManager.put("TabbedPane.selected", GOLD);
+        UIManager.put("TabbedPane.foreground", MAROON);
+        tabbedPane.setBackground(LIGHT_BG);
+        tabbedPane.setForeground(MAROON);
 
-        JPanel avatarPanel = new JPanel();
-        avatarPanel.setOpaque(false);
-        avatarPanel.setLayout(new BoxLayout(avatarPanel, BoxLayout.Y_AXIS));
-        avatarPanel.setBorder(BorderFactory.createEmptyBorder(0, 12, 16, 12));
-        avatarPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 110));
-
-        JLabel catIcon = new JLabel("🐱", SwingConstants.CENTER);
-        catIcon.setFont(new Font("SansSerif", Font.PLAIN, 36));
-        catIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel nameLabel = new JLabel(fullName, SwingConstants.CENTER);
-        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
-        nameLabel.setForeground(WHITE);
-        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel roleLabel = new JLabel(role, SwingConstants.CENTER);
-        roleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        roleLabel.setForeground(GOLD);
-        roleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        String collegeShort = college.length() > 28
-                ? college.substring(0, 25) + "..." : college;
-        JLabel collegeLabel = new JLabel(collegeShort, SwingConstants.CENTER);
-        collegeLabel.setFont(new Font("Segoe UI", Font.PLAIN, 9));
-        collegeLabel.setForeground(new Color(220, 180, 180));
-        collegeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        avatarPanel.add(catIcon);
-        avatarPanel.add(Box.createRigidArea(new Dimension(0, 4)));
-        avatarPanel.add(nameLabel);
-        avatarPanel.add(Box.createRigidArea(new Dimension(0, 2)));
-        avatarPanel.add(roleLabel);
-        avatarPanel.add(Box.createRigidArea(new Dimension(0, 2)));
-        avatarPanel.add(collegeLabel);
-
-        JSeparator sep = new JSeparator(SwingConstants.HORIZONTAL);
-        sep.setForeground(new Color(160, 60, 60));
-        sep.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
-
-        sidebar.add(avatarPanel);
-        sidebar.add(sep);
-        sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
-
-        btnBrowse = navButton("🔍  Browse Jobs", PANEL_BROWSE);
-        btnPost = navButton("➕  Post a Job", PANEL_POST);
-        btnMyListings = navButton("📋  My Listings", PANEL_MYLIST);
-        btnMyApps = navButton("📩  My Applications", PANEL_MYAPPS);
-
-        sidebar.add(btnBrowse);
-        sidebar.add(Box.createRigidArea(new Dimension(0, 4)));
-        sidebar.add(btnPost);
-        sidebar.add(Box.createRigidArea(new Dimension(0, 4)));
-        sidebar.add(btnMyListings);
-        sidebar.add(Box.createRigidArea(new Dimension(0, 4)));
-        sidebar.add(btnMyApps);
-
-        sidebar.add(Box.createVerticalGlue());
-
-        JLabel footer = new JLabel("CCC102 - Cats on a Quest", SwingConstants.CENTER);
-        footer.setFont(new Font("Segoe UI", Font.PLAIN, 9));
-        footer.setForeground(new Color(160, 80, 80));
-        footer.setAlignmentX(Component.CENTER_ALIGNMENT);
-        sidebar.add(footer);
-        sidebar.add(Box.createRigidArea(new Dimension(0, 8)));
-
-        return sidebar;
-    }
-
-    private JButton navButton(String text, String panelName) {
-        JButton btn = new JButton(text);
-        btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
-        btn.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        btn.setForeground(new Color(240, 210, 210));
-        btn.setBackground(MAROON_DARK);
-        btn.setHorizontalAlignment(SwingConstants.LEFT);
-        btn.setBorder(BorderFactory.createEmptyBorder(8, 18, 8, 18));
-        btn.setFocusPainted(false);
-        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btn.setOpaque(true);
-        btn.addActionListener(e -> showPanel(panelName));
-
-        btn.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                if (!btn.getBackground().equals(GOLD))
-                    btn.setBackground(MAROON);
-            }
-
-            public void mouseExited(MouseEvent e) {
-                if (!btn.getBackground().equals(GOLD))
-                    btn.setBackground(MAROON_DARK);
-            }
-        });
-        return btn;
-    }
-
-    public void showPanel(String panelName) {
-        cardLayout.show(contentArea, panelName);
-
-        // Reset all buttons to default style
-        for (JButton b : new JButton[]{btnBrowse, btnPost, btnMyListings, btnMyApps}) {
-            b.setBackground(MAROON_DARK);
-            b.setForeground(new Color(240, 210, 210));
-            b.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        }
-
-        // Highlight the active button in gold
-        JButton active;
-        switch (panelName) {
-            case PANEL_POST:
-                active = btnPost;
-                break;
-            case PANEL_MYLIST:
-                active = btnMyListings;
-                break;
-            case PANEL_MYAPPS:
-                active = btnMyApps;
-                break;
-            default:
-                active = btnBrowse;
-                break;
-        }
-        active.setBackground(GOLD);
-        active.setForeground(MAROON_DARK);
-        active.setFont(new Font("Segoe UI", Font.BOLD, 12));
-
-        // Refresh the visible panel so it shows latest data
-        for (Component c : contentArea.getComponents()) {
-            if (c.isVisible()) {
-                if (c instanceof BrowsePanel)
-                    ((BrowsePanel) c).refresh();
-                else if (c instanceof MyListingPanel)
-                    ((MyListingPanel) c).refresh();
-                else if (c instanceof MyApplicationPanel)
-                    ((MyApplicationPanel) c).refresh();
-            }
-        }
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public String getRole() {
-        return role;
+        // Add visual separator
+        tabbedPane.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(200, 180, 180)));
     }
 
     private void handleLogout() {
-        int choice = JOptionPane.showConfirmDialog(
-                this,
-                "Are you sure you want to log out?",
-                "Logout Confirmation",
-                JOptionPane.YES_NO_OPTION
-        );
-        if (choice == JOptionPane.YES_OPTION) {
-            DataStore.logout();
+        int response = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to logout?",
+                "Confirm Logout",
+                JOptionPane.YES_NO_OPTION);
+
+        if (response == JOptionPane.YES_OPTION) {
+            DataStore.setCurrentUser(null);
             dispose();
-            SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
+            new LoginAndRegistration.LoginFrame().setVisible(true);
         }
+    }
+
+    private Image createDummyIcon() {
+        BufferedImage icon = new BufferedImage(32, 32, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = icon.createGraphics();
+        g2d.setColor(MAROON);
+        g2d.fillRect(0, 0, 32, 32);
+        g2d.setColor(GOLD);
+        g2d.drawString("Co", 5, 20);
+        g2d.dispose();
+        return icon;
     }
 }

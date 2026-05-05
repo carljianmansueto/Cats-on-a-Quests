@@ -142,7 +142,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
-        // Footer
+        // Footer part showing "CCC102 - Cats on a Quest"
         JPanel footerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         footerPanel.setBackground(LIGHT_BG);
         JLabel footerLabel = new JLabel("CCC102 - Cats on a Quest");
