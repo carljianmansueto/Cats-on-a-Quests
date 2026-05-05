@@ -243,7 +243,7 @@ public class RegisterFrame extends JFrame implements ActionListener {
         String password = new String(passwordField.getPassword());
         String confirm  = new String(confirmField.getPassword());
 
-        //Validator part, checks whether user input a correct info
+        //Validator part, checks whether user inputs a correct info
         if (fullName.isEmpty())    { showMessage("Please enter your full name"); return; }
         if (email.isEmpty())       { showMessage("Please enter your email"); return; }
         if (!email.endsWith("@g.msuiit.edu.ph")) { showMessage("Email must be @g.msuiit.edu.ph"); return;}
