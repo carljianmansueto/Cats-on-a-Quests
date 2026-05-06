@@ -214,7 +214,7 @@ public class MyListingPanel extends JPanel {
         btnPanel.setOpaque(false);
 
         // FIX 3: "View Applicants" button — fully working, always shown
-        JButton viewAppsBtn = makeBtn("👥 View Applicants", MAROON, Color.WHITE);
+        JButton viewAppsBtn = makeBtn("View Applicants", MAROON, Color.WHITE);
         viewAppsBtn.addActionListener(e -> openApplicantsDialog(listing));
 
         // FIX 1: Edit button — opens real edit dialog (only for OPEN listings)

@@ -179,7 +179,7 @@ public class BrowsePanel extends JPanel {
         );
     }
 
-    // ── Expandable card component ─────────────────────────────────────────
+    // Expandable card component
 
     private class ExpandableCard extends JPanel {
 
@@ -247,7 +247,7 @@ public class BrowsePanel extends JPanel {
             SwingUtilities.invokeLater(() -> scrollRectToVisible(getBounds()));
         }
 
-        // ── Collapsed view (always visible) ──────────────────────
+        // ollapsed view (always visible)
 
         private JPanel buildCollapsedView() {
             JPanel panel = new JPanel(new BorderLayout(10, 4));
@@ -303,7 +303,7 @@ public class BrowsePanel extends JPanel {
             return panel;
         }
 
-        // ── Expanded view (shown on click) ────────────────────────
+        // Expanded view (shown on click)
 
         private JPanel buildExpandedView() {
             JPanel panel = new JPanel();
@@ -426,7 +426,7 @@ public class BrowsePanel extends JPanel {
         }
     }
 
-    // ── Apply handler ─────────────────────────────────────────────────────
+    // Apply handler
 
     private void handleApply(JobListing job, JButton applyBtn) {
         JTextArea messageArea = new JTextArea(4, 30);
