@@ -6,11 +6,10 @@ import DataAndModels.User;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class PostPanel extends JPanel {
+public class PostAJobPanel extends JPanel {
 
     // Colors — matched to LoginFrame and RegisterFrame maroon theme
     private static final Color MAROON       = new Color(128, 0, 0);
@@ -36,7 +35,7 @@ public class PostPanel extends JPanel {
 
     // Constructor
 
-    public PostPanel(User user) {
+    public PostAJobPanel(User user) {
         this.currentUser = user;
         setLayout(new BorderLayout());
         setBackground(LIGHT_BG);

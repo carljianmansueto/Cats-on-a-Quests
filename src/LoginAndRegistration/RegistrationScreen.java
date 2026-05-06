@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class RegisterFrame extends JFrame implements ActionListener {
+public class RegistrationScreen extends JFrame implements ActionListener {
 
     private JTextField fullNameField;
     private JTextField emailField;
@@ -31,7 +31,7 @@ public class RegisterFrame extends JFrame implements ActionListener {
     private static final String[] ROLES = {"Student", "Faculty", "Staff"};
     private static final String[] COLLEGES = { "College of Engineering and Technology", "College of Science and Mathematics", "College of Computer Studies", "College of Education", "College of Arts and Science", "College of Business Administration & Accountancy", "College of Nursing", "Other"};
 
-    public RegisterFrame() {
+    public RegistrationScreen() {
         setTitle("Cats on a Quest - Register");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(400, 620);
@@ -229,7 +229,7 @@ public class RegisterFrame extends JFrame implements ActionListener {
             handleRegister();
         } else if (e.getSource() == backButton) {
             dispose();
-            new LoginFrame().setVisible(true);
+            new LoginScreen().setVisible(true);
         }
     }
 
@@ -263,7 +263,7 @@ public class RegisterFrame extends JFrame implements ActionListener {
                     "Registration successful!\nYou can now login with: " + email,
                     "Success", JOptionPane.INFORMATION_MESSAGE);
             dispose();
-            new LoginFrame().setVisible(true);
+            new LoginScreen().setVisible(true);
         } else {
             showMessage(error);
         }

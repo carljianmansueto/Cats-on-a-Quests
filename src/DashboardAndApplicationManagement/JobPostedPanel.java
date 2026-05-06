@@ -41,7 +41,7 @@ import javax.imageio.ImageIO;
  *        View Applicants always works regardless of status.
  * ─────────────────────────────────────────────────────────────────
  */
-public class MyListingPanel extends JPanel {
+public class JobPostedPanel extends JPanel {
 
     private static final Color MAROON      = new Color(128, 0, 0);
     private static final Color LIGHT_BG    = new Color(248, 245, 245);
@@ -58,7 +58,7 @@ public class MyListingPanel extends JPanel {
     private JLabel            noListingsLabel;
     private JComboBox<String> statusFilter;
 
-    public MyListingPanel(User user) {
+    public JobPostedPanel(User user) {
         this.currentUser = user;
         setLayout(new BorderLayout());
         setBackground(LIGHT_BG);
@@ -214,7 +214,7 @@ public class MyListingPanel extends JPanel {
         btnPanel.setOpaque(false);
 
         // FIX 3: "View Applicants" button — fully working, always shown
-        JButton viewAppsBtn = makeBtn("👥 View Applicants", MAROON, Color.WHITE);
+        JButton viewAppsBtn = makeBtn("View Applicants", MAROON, Color.WHITE);
         viewAppsBtn.addActionListener(e -> openApplicantsDialog(listing));
 
         // FIX 1: Edit button — opens real edit dialog (only for OPEN listings)

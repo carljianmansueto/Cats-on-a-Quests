@@ -1,4 +1,4 @@
-import LoginAndRegistration.LoginFrame;
+import LoginAndRegistration.LoginScreen;
 import DataAndModels.DataStore;
 import javax.swing.*;
 
@@ -9,7 +9,7 @@ public class Main {
 
         // Launch the login screen
         SwingUtilities.invokeLater(() -> {
-            new LoginFrame().setVisible(true);
+            new LoginScreen().setVisible(true);
         });
     }
 }
