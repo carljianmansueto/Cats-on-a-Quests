@@ -84,7 +84,7 @@ public class JobPostedPanel extends JPanel {
         topBar.setBackground(MAROON);
         topBar.setBorder(BorderFactory.createEmptyBorder(14, 20, 14, 20));
 
-        JLabel titleLabel = new JLabel("My Listings");
+        JLabel titleLabel = new JLabel("Job Posted");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         titleLabel.setForeground(Color.WHITE);
 
