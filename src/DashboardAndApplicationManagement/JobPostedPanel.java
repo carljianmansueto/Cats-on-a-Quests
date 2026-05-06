@@ -1,4 +1,4 @@
-package DashboardAndApplicationManagement;
+
 
 import DataAndModels.Application;
 import DataAndModels.DataStore;
@@ -13,35 +13,8 @@ import java.io.File;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
-/**
- * MyListingPanel.java — Member 4
- *
- * BUGS FIXED IN THIS VERSION:
- * ─────────────────────────────────────────────────────────────────
- * BUG 1 — Edit button did nothing (just printed to console)
- *   Fix: editBtn now opens a real dialog where the poster can
- *        update the title, description, pay, slots, and deadline.
- *
- * BUG 2 — Delete button did nothing (just printed to console)
- *   Fix: deleteBtn now shows a YES/NO confirmation dialog, then
- *        calls DataStore.removeListing() and refreshes the board.
- *
- * BUG 3 — No way to see who applied or accept/reject them
- *   Fix: Added "View Applicants" button on every card.
- *        Opens a popup table showing all applicants with their
- *        email, date applied, message, and status.
- *        Poster can click Accept or Reject for each applicant.
- *
- * BUG 4 — "Create New Listing" button did nothing
- *   Fix: Now navigates to the Post a Job tab via MainFrame.
- *
- * BUG 5 — Edit/Delete disabled for all non-OPEN listings
- *   Fix: Delete always works (you can delete a closed listing too).
- *        Edit is only for OPEN listings (makes logical sense).
- *        View Applicants always works regardless of status.
- * ─────────────────────────────────────────────────────────────────
- */
-public class JobPostedPanel extends JPanel {
+
+public class MyListingPanel extends JPanel {
 
     private static final Color MAROON      = new Color(128, 0, 0);
     private static final Color LIGHT_BG    = new Color(248, 245, 245);
@@ -58,7 +31,7 @@ public class JobPostedPanel extends JPanel {
     private JLabel            noListingsLabel;
     private JComboBox<String> statusFilter;
 
-    public JobPostedPanel(User user) {
+    public MyListingPanel(User user) {
         this.currentUser = user;
         setLayout(new BorderLayout());
         setBackground(LIGHT_BG);
@@ -84,7 +57,7 @@ public class JobPostedPanel extends JPanel {
         topBar.setBackground(MAROON);
         topBar.setBorder(BorderFactory.createEmptyBorder(14, 20, 14, 20));
 
-        JLabel titleLabel = new JLabel("Job Posted");
+        JLabel titleLabel = new JLabel("My Listings");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         titleLabel.setForeground(Color.WHITE);
 
@@ -214,7 +187,7 @@ public class JobPostedPanel extends JPanel {
         btnPanel.setOpaque(false);
 
         // FIX 3: "View Applicants" button — fully working, always shown
-        JButton viewAppsBtn = makeBtn("View Applicants", MAROON, Color.WHITE);
+        JButton viewAppsBtn = makeBtn("👥 View Applicants", MAROON, Color.WHITE);
         viewAppsBtn.addActionListener(e -> openApplicantsDialog(listing));
 
         // FIX 1: Edit button — opens real edit dialog (only for OPEN listings)
@@ -266,7 +239,7 @@ public class JobPostedPanel extends JPanel {
         ArrayList<Application> apps = DataStore.getApplicationsForListing(listing.getListingId());
 
         JDialog dialog = new JDialog(parent, "Applicants — " + listing.getTitle(), Dialog.ModalityType.APPLICATION_MODAL);
-        dialog.setSize(700, 440);
+        dialog.setSize(800, 440);
         dialog.setLocationRelativeTo(parent);
         dialog.setLayout(new BorderLayout());
 
@@ -290,21 +263,18 @@ public class JobPostedPanel extends JPanel {
             dialog.add(none, BorderLayout.CENTER);
         } else {
             // Build the applicants table
-            String[] cols = {"App ID", "Applicant Email", "Date Applied", "Status", "Message"};
+            String[] cols = {"App ID", "Applicant Email", "Date Applied", "Status", "Applicant's Details"};
             DefaultTableModel model = new DefaultTableModel(cols, 0) {
                 @Override public boolean isCellEditable(int r, int c) { return false; }
             };
 
             for (Application a : apps) {
-                String preview = a.getMessage().length() > 50
-                        ? a.getMessage().substring(0, 50) + "..."
-                        : a.getMessage();
                 model.addRow(new Object[]{
                         a.getApplicationId(),
                         a.getApplicantEmail(),
                         a.getDateApplied(),
                         a.getStatus(),
-                        preview
+                        "View Details"  // Button placeholder
                 });
             }
 
@@ -322,16 +292,30 @@ public class JobPostedPanel extends JPanel {
             th.setForeground(Color.WHITE);
             th.setReorderingAllowed(false);
 
-            // Color-code the Status column (index 3)
+            // Custom renderer for Status and Action columns
             table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
                 @Override
                 public Component getTableCellRendererComponent(
                         JTable t, Object val, boolean sel, boolean foc, int row, int col) {
+
+                    if (col == 4) { // Action column
+                        JButton btn = new JButton("📄 View");
+                        btn.setBackground(MAROON);
+                        btn.setForeground(Color.WHITE);
+                        btn.setFont(new Font("Segoe UI", Font.BOLD, 11));
+                        btn.setFocusPainted(false);
+                        btn.setBorderPainted(false);
+                        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                        btn.setOpaque(true);
+                        return btn;
+                    }
+
                     super.getTableCellRendererComponent(t, val, sel, foc, row, col);
                     if (!sel) {
                         setBackground(row % 2 == 0 ? Color.WHITE : new Color(252, 245, 245));
-                        String st = (String) model.getValueAt(row, 3);
-                        if (col == 3) {
+
+                        if (col == 3) { // Status column
+                            String st = (String) model.getValueAt(row, 3);
                             setForeground("ACCEPTED".equals(st) ? GREEN :
                                     "REJECTED".equals(st) ? RED_BTN : new Color(180, 110, 0));
                             setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -342,6 +326,26 @@ public class JobPostedPanel extends JPanel {
                     }
                     setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
                     return this;
+                }
+            });
+
+            // Handle View Details button clicks
+            table.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent e) {
+                    int row = table.rowAtPoint(e.getPoint());
+                    int col = table.columnAtPoint(e.getPoint());
+                    if (col == 4 && row >= 0) {
+                        String appId = (String) model.getValueAt(row, 0);
+                        // Find the application object
+                        Application selectedApp = apps.stream()
+                                .filter(a -> a.getApplicationId().equals(appId))
+                                .findFirst()
+                                .orElse(null);
+                        if (selectedApp != null) {
+                            showApplicantDetailsDialog(selectedApp, dialog);
+                        }
+                    }
                 }
             });
 
@@ -375,12 +379,12 @@ public class JobPostedPanel extends JPanel {
                     return;
                 }
                 DataStore.updateApplicationStatus(appId, "ACCEPTED");
-                model.setValueAt("ACCEPTED", row, 3); // update table live
+                model.setValueAt("ACCEPTED", row, 3);
                 table.repaint();
                 JOptionPane.showMessageDialog(dialog,
                         "Applicant accepted! They will see this update in their My Applications tab.",
                         "Accepted", JOptionPane.INFORMATION_MESSAGE);
-                loadUserListings(); // refresh card's application count
+                loadUserListings();
             });
 
             rejectBtn.addActionListener(e -> {
@@ -409,6 +413,126 @@ public class JobPostedPanel extends JPanel {
         }
 
         dialog.setVisible(true);
+    }
+    /**
+     * Opens a detailed view dialog for an applicant showing:
+     * - Full name/email
+     * - Application date
+     * - Current status
+     * - FULL message (no truncation)
+     */
+    private void showApplicantDetailsDialog(Application app, Window parent) {
+        JDialog detailsDialog = new JDialog(
+                parent,
+                "Applicant Details — " + app.getApplicantEmail(),
+                Dialog.ModalityType.APPLICATION_MODAL);
+        detailsDialog.setSize(550, 450);
+        detailsDialog.setLocationRelativeTo(parent);
+        detailsDialog.setLayout(new BorderLayout());
+
+        // Header
+        JPanel header = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 10));
+        header.setBackground(MAROON);
+        JLabel hTitle = new JLabel("📋 Applicant Details");
+        hTitle.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        hTitle.setForeground(Color.WHITE);
+        header.add(hTitle);
+        detailsDialog.add(header, BorderLayout.NORTH);
+
+        // Content panel
+        JPanel content = new JPanel();
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+        content.setBorder(BorderFactory.createEmptyBorder(16, 20, 16, 20));
+        content.setBackground(Color.WHITE);
+
+        // Applicant info
+        addDetailRow(content, "Email:", app.getApplicantEmail());
+        addDetailRow(content, "Application ID:", app.getApplicationId());
+        addDetailRow(content, "Date Applied:", app.getDateApplied());
+
+        // Status badge
+        JPanel statusRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        statusRow.setOpaque(false);
+        JLabel statusLbl = new JLabel("Status:");
+        statusLbl.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        statusLbl.setForeground(MAROON);
+
+        JLabel statusValue = new JLabel(app.getStatus());
+        statusValue.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        statusValue.setForeground(
+                "ACCEPTED".equals(app.getStatus()) ? GREEN :
+                "REJECTED".equals(app.getStatus()) ? RED_BTN :
+                new Color(180, 110, 0)
+        );
+        statusRow.add(statusLbl);
+        statusRow.add(statusValue);
+        statusRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+        content.add(statusRow);
+        content.add(Box.createVerticalStrut(16));
+
+        // Message section
+        JLabel msgLabel = new JLabel("📝 Message from Applicant:");
+        msgLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        msgLabel.setForeground(MAROON);
+        msgLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        content.add(msgLabel);
+        content.add(Box.createVerticalStrut(8));
+
+        // Message text area (full message, read-only)
+        JTextArea messageArea = new JTextArea(app.getMessage());
+        messageArea.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        messageArea.setLineWrap(true);
+        messageArea.setWrapStyleWord(true);
+        messageArea.setEditable(false);
+        messageArea.setOpaque(true);
+        messageArea.setBackground(new Color(245, 245, 245));
+        messageArea.setForeground(Color.DARK_GRAY);
+        messageArea.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(BORDER_CLR),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
+
+        JScrollPane msgScroll = new JScrollPane(messageArea);
+        msgScroll.setAlignmentX(Component.LEFT_ALIGNMENT);
+        msgScroll.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
+        content.add(msgScroll);
+
+        detailsDialog.add(new JScrollPane(content), BorderLayout.CENTER);
+
+        // Close button
+        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        btnPanel.setBackground(LIGHT_BG);
+        btnPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, BORDER_CLR));
+
+        JButton closeBtn = makeBtn("Close", new Color(120, 120, 120), Color.WHITE);
+        closeBtn.addActionListener(e -> detailsDialog.dispose());
+        btnPanel.add(closeBtn);
+
+        detailsDialog.add(btnPanel, BorderLayout.SOUTH);
+        detailsDialog.setVisible(true);
+    }
+
+    /**
+     * Helper to add a single detail row (label + value)
+     */
+    private void addDetailRow(JPanel panel, String label, String value) {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        row.setOpaque(false);
+
+        JLabel lbl = new JLabel(label);
+        lbl.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lbl.setForeground(MAROON);
+        lbl.setPreferredSize(new Dimension(120, 20));
+
+        JLabel val = new JLabel(value);
+        val.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        val.setForeground(Color.DARK_GRAY);
+
+        row.add(lbl);
+        row.add(val);
+        row.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(row);
+        panel.add(Box.createVerticalStrut(8));
     }
 
     // ── FIX 1: Edit dialog ────────────────────────────────────────────────────
