@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-public class BrowsePanel extends JPanel {
+public class BrowseJobsPanel extends JPanel {
 
     private static final Color MAROON        = new Color(128, 0, 0);
     private static final Color LIGHT_BG      = new Color(248, 245, 245);
@@ -25,7 +25,7 @@ public class BrowsePanel extends JPanel {
     private JComboBox<String> categoryFilter;
     private JLabel            resultLabel;
 
-    public BrowsePanel(User user) {
+    public BrowseJobsPanel(User user) {
         this.currentUser = user;
         setLayout(new BorderLayout(0, 0));
         setBackground(LIGHT_BG);

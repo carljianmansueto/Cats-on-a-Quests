@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class LoginFrame extends JFrame implements ActionListener {
+public class LoginScreen extends JFrame implements ActionListener {
 
     private JTextField emailField;  // Text field where the user types their email
     private JPasswordField passwordField;       // Password field for security so input is hidden
@@ -23,7 +23,7 @@ public class LoginFrame extends JFrame implements ActionListener {
     private static final Color BORDER_GRAY = new Color(220, 220, 220);
     private static final Color GOLD        = new Color(255, 215, 0);
 
-    public LoginFrame() {
+    public LoginScreen() {
         setTitle("Cats on a Quest - Login");    // Set the window title shown on top of the frame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   // Makes sure the application fully closes when this window is closed
         setSize(400, 500);          // Fixed window size so layout stays consistent
@@ -175,7 +175,7 @@ public class LoginFrame extends JFrame implements ActionListener {
             handleLogin();
         } else if (e.getSource() == registerButton) {
             dispose();
-            new RegisterFrame().setVisible(true);
+            new RegistrationScreen().setVisible(true);
         }
     }
 

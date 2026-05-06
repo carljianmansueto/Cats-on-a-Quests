@@ -41,7 +41,7 @@ import javax.imageio.ImageIO;
  *        View Applicants always works regardless of status.
  * ─────────────────────────────────────────────────────────────────
  */
-public class MyListingPanel extends JPanel {
+public class JobPostedPanel extends JPanel {
 
     private static final Color MAROON      = new Color(128, 0, 0);
     private static final Color LIGHT_BG    = new Color(248, 245, 245);
@@ -58,7 +58,7 @@ public class MyListingPanel extends JPanel {
     private JLabel            noListingsLabel;
     private JComboBox<String> statusFilter;
 
-    public MyListingPanel(User user) {
+    public JobPostedPanel(User user) {
         this.currentUser = user;
         setLayout(new BorderLayout());
         setBackground(LIGHT_BG);
@@ -84,7 +84,7 @@ public class MyListingPanel extends JPanel {
         topBar.setBackground(MAROON);
         topBar.setBorder(BorderFactory.createEmptyBorder(14, 20, 14, 20));
 
-        JLabel titleLabel = new JLabel("My Listings");
+        JLabel titleLabel = new JLabel("Job Posted");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         titleLabel.setForeground(Color.WHITE);
 

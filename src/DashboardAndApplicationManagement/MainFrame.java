@@ -1,9 +1,10 @@
 package DashboardAndApplicationManagement;
 
-import BrowseAndPostFeatures.BrowsePanel;
-import BrowseAndPostFeatures.PostPanel;
+import BrowseAndPostFeatures.BrowseJobsPanel;
+import BrowseAndPostFeatures.PostAJobPanel;
 import DataAndModels.DataStore;
 import DataAndModels.User;
+import LoginAndRegistration.LoginScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,9 +26,9 @@ public class MainFrame extends JFrame {
     private String idNumber;
 
     // Panels
-    private BrowsePanel browsePanel;
-    private PostPanel postPanel;
-    private MyListingPanel myListingPanel;
+    private BrowseJobsPanel browseJobsPanel;
+    private PostAJobPanel postAJobPanel;
+    private JobPostedPanel jobPostedPanel;
     private MyApplicationPanel myApplicationPanel;
 
     // Tabbed pane
@@ -97,15 +98,15 @@ public class MainFrame extends JFrame {
         tabbedPane.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 
         // Initialize all panels
-        browsePanel = new BrowsePanel(currentUser);
-        postPanel = new PostPanel(currentUser);
-        myListingPanel = new MyListingPanel(currentUser);
+        browseJobsPanel = new BrowseJobsPanel(currentUser);
+        postAJobPanel = new PostAJobPanel(currentUser);
+        jobPostedPanel = new JobPostedPanel(currentUser);
         myApplicationPanel = new MyApplicationPanel(currentUser);
 
         // Add tabs
-        tabbedPane.addTab("Browse Jobs & Services", browsePanel);
-        tabbedPane.addTab("Post a Job or Service", postPanel);
-        tabbedPane.addTab("My Listings", myListingPanel);
+        tabbedPane.addTab("Browse Jobs", browseJobsPanel);
+        tabbedPane.addTab("Post a Job", postAJobPanel);
+        tabbedPane.addTab("Job Posted", jobPostedPanel);
         tabbedPane.addTab("My Applications", myApplicationPanel);
 
         // Set tab colors and styling
@@ -137,7 +138,7 @@ public class MainFrame extends JFrame {
         if (response == JOptionPane.YES_OPTION) {
             DataStore.setCurrentUser(null);
             dispose();
-            new LoginAndRegistration.LoginFrame().setVisible(true);
+            new LoginScreen().setVisible(true);
         }
     }
 
