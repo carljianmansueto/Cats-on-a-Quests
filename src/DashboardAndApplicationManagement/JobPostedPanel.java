@@ -1,4 +1,4 @@
-
+package DashboardAndApplicationManagement;
 
 import DataAndModels.Application;
 import DataAndModels.DataStore;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 
-public class MyListingPanel extends JPanel {
+public class JobPostedPanel extends JPanel {
 
     private static final Color MAROON      = new Color(128, 0, 0);
     private static final Color LIGHT_BG    = new Color(248, 245, 245);
@@ -31,7 +31,7 @@ public class MyListingPanel extends JPanel {
     private JLabel            noListingsLabel;
     private JComboBox<String> statusFilter;
 
-    public MyListingPanel(User user) {
+    public JobPostedPanel(User user) {
         this.currentUser = user;
         setLayout(new BorderLayout());
         setBackground(LIGHT_BG);
@@ -57,7 +57,7 @@ public class MyListingPanel extends JPanel {
         topBar.setBackground(MAROON);
         topBar.setBorder(BorderFactory.createEmptyBorder(14, 20, 14, 20));
 
-        JLabel titleLabel = new JLabel("My Listings");
+        JLabel titleLabel = new JLabel("Job Posted");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         titleLabel.setForeground(Color.WHITE);
 
@@ -75,7 +75,7 @@ public class MyListingPanel extends JPanel {
         JButton createNewBtn = makeBtn("Create New Listing", GOLD, MAROON);
         createNewBtn.addActionListener(e -> {
             // MainFrame uses JTabbedPane — navigate by switching to tab index 1
-            // Tab order: 0=Browse, 1=Post a Job, 2=My Listings, 3=My Applications
+            // Tab order: 0=Browse, 1=Post a Job, 2=Job Posted, 3=My Applications
             Window w = SwingUtilities.getWindowAncestor(this);
             if (w instanceof MainFrame) {
                 ((MainFrame) w).goToPostTab();
@@ -461,8 +461,8 @@ public class MyListingPanel extends JPanel {
         statusValue.setFont(new Font("Segoe UI", Font.BOLD, 12));
         statusValue.setForeground(
                 "ACCEPTED".equals(app.getStatus()) ? GREEN :
-                "REJECTED".equals(app.getStatus()) ? RED_BTN :
-                new Color(180, 110, 0)
+                        "REJECTED".equals(app.getStatus()) ? RED_BTN :
+                                new Color(180, 110, 0)
         );
         statusRow.add(statusLbl);
         statusRow.add(statusValue);
