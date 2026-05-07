@@ -94,7 +94,7 @@ public class BrowseJobsPanel extends JPanel {
         subBar.setBackground(new Color(245, 240, 240));
         subBar.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, BORDER_COLOR));
 
-        resultLabel = new JLabel("Loading listings...");
+        resultLabel = new JLabel("Loading jobs...");
         resultLabel.setFont(new Font("SansSerif", Font.ITALIC, 12));
         resultLabel.setForeground(Color.GRAY);
 
@@ -152,10 +152,10 @@ public class BrowseJobsPanel extends JPanel {
             }
         }
 
-        resultLabel.setText(filtered.size() + " listing(s) found");
+        resultLabel.setText(filtered.size() + " job(s) found");
 
         if (filtered.isEmpty()) {
-            JLabel none = new JLabel("No listings found. Try a different search.");
+            JLabel none = new JLabel("No jobs found. Try a different search.");
             none.setFont(new Font("SansSerif", Font.ITALIC, 13));
             none.setForeground(Color.GRAY);
             none.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -351,7 +351,7 @@ public class BrowseJobsPanel extends JPanel {
             addDetailRow(detailsGrid, "📅 Deadline",   job.getDeadline());
             addDetailRow(detailsGrid, "📬 Posted by",  job.getPostedBy());
             addDetailRow(detailsGrid, "🗓 Date posted", job.getDatePosted());
-            addDetailRow(detailsGrid, "🆔 Listing ID", job.getListingId());
+            addDetailRow(detailsGrid, "🆔 Job ID", job.getListingId());
 
             panel.add(detailsGrid);
             panel.add(Box.createRigidArea(new Dimension(0, 16)));
@@ -372,7 +372,7 @@ public class BrowseJobsPanel extends JPanel {
             applyBtn.setPreferredSize(new Dimension(140, 38));
 
             if (isOwn) {
-                applyBtn.setText("Your Listing");
+                applyBtn.setText("Your Job");
                 applyBtn.setBackground(new Color(180, 180, 180));
                 applyBtn.setForeground(Color.WHITE);
                 applyBtn.setEnabled(false);
