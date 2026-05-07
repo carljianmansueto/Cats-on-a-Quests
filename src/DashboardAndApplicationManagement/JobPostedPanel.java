@@ -263,7 +263,7 @@ public class MyListingPanel extends JPanel {
             dialog.add(none, BorderLayout.CENTER);
         } else {
             // Build the applicants table
-            String[] cols = {"App ID", "Applicant Email", "Date Applied", "Status", "Applicant's Details"};
+            String[] cols = {"App ID", "Applicant Email", "Date Applied", "Status", "Applicant Details"};
             DefaultTableModel model = new DefaultTableModel(cols, 0) {
                 @Override public boolean isCellEditable(int r, int c) { return false; }
             };
