@@ -75,7 +75,7 @@ public class PostAJobPanel extends JPanel {
                 BorderFactory.createEmptyBorder(24, 32, 24, 32)
         ));
 
-        JLabel formTitle = new JLabel("New Listing Details");
+        JLabel formTitle = new JLabel("New Job Details");
         formTitle.setFont(new Font("Segoe UI", Font.BOLD, 15));
         formTitle.setForeground(MAROON);
         formTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -109,7 +109,7 @@ public class PostAJobPanel extends JPanel {
         descScroll.setAlignmentX(Component.LEFT_ALIGNMENT);
         addFormRowComponent(formCard, "Description *", descScroll);
 
-        String[] categories = {
+        String[] categories = { // categories sa "post a job"
                 "Tutoring", "Design", "Research",
                 "Errand", "Technical", "Creative", "Labor", "Other"
         };
@@ -152,7 +152,7 @@ public class PostAJobPanel extends JPanel {
         btnRow.setOpaque(false);
         btnRow.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JButton postBtn = new JButton("Post Listing");
+        JButton postBtn = new JButton("Post Job");
         postBtn.setBackground(MAROON);
         postBtn.setForeground(GOLD);
         postBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -208,7 +208,7 @@ public class PostAJobPanel extends JPanel {
         String slotsStr = slotsField.getText().trim();
         String deadline = deadlineField.getText().trim();
 
-        // Validation
+        // validation if wala silay gi butang
         if (title.isEmpty()) {
             showError("Title is required."); return;
         }
@@ -274,10 +274,10 @@ public class PostAJobPanel extends JPanel {
         DataStore.addListing(newJob);
 
         messageLabel.setForeground(new Color(0, 128, 0));
-        messageLabel.setText("Listing posted! ID: " + listingId);
+        messageLabel.setText("Job posted! ID: " + listingId);
 
         JOptionPane.showMessageDialog(this,
-                "Your listing has been posted!\n"
+                "Your Job has been posted!\n"
                         + "Job ID: " + listingId + "\n"
                         + "Title: " + title,
                 "Posted!", JOptionPane.INFORMATION_MESSAGE);
