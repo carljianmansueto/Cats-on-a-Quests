@@ -101,7 +101,7 @@ public class LoginScreen extends JFrame implements ActionListener {
         messageLabel.setForeground(Color.RED);
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(messageLabel);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 12)));
 
         // Log In button
         loginButton = new JButton("Log In");
@@ -208,6 +208,7 @@ public class LoginScreen extends JFrame implements ActionListener {
                     "Success", JOptionPane.INFORMATION_MESSAGE);
 
             // Closes the login screen and proceed to main screen
+            // Pass user details to the main dashboard and display it
             dispose();
             new MainFrame(user.getFullName(), user.getRole(), user.getEmail(), user.getCollege(), user.getCourse(), user.getIdNumber()).setVisible(true);
         } else {
