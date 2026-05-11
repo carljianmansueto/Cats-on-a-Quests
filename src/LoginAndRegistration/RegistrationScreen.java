@@ -43,7 +43,7 @@ public class RegistrationScreen extends JFrame implements ActionListener {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(LIGHT_BG);
 
-        // ── Maroon header banner (just like LoginFrame) ──────────
+        // Maroon header banner (just like LoginFrame)
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
         headerPanel.setBackground(MAROON);
@@ -161,7 +161,7 @@ public class RegistrationScreen extends JFrame implements ActionListener {
         add(mainPanel);
     }
 
-    // ── Helpers (same field sizing/style as LoginFrame) ──────────
+    // Helpers (same field sizing/style as LoginFrame)
 
     private void addLabel(JPanel panel, String text) {
         // Wrap in a 280px-wide panel so the label hugs the left edge of the fields
@@ -221,7 +221,7 @@ public class RegistrationScreen extends JFrame implements ActionListener {
         return combo;
     }
 
-    // ── Logic ────────────────────────────────────────────────────
+    // Logic part (if that button is click, it proceeds to...)
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -257,7 +257,7 @@ public class RegistrationScreen extends JFrame implements ActionListener {
         User newUser = new User(fullName, password, email, role, college, course, idNumber);
         String error = DataStore.register(newUser);
 
-        //
+        //// If registration succeeds, notify the user and redirect to login
         if (error == null) {
             JOptionPane.showMessageDialog(this,
                     "Registration successful!\nYou can now login with: " + email,
